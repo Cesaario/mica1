@@ -9,11 +9,11 @@
         </v-toolbar>
         <v-navigation-drawer v-model='menu' app temporary class='blue-grey darken-4'>
             <v-layout justify-center wrap class='py-3 fundo-menu'>
-                <span class='display-4 font-weight-bold blue-grey--text text--darken-4'>MICA</span>
+                <span class='display-4 font-weight-bold blue--text text--lighten-1 fonte'>mica</span>
             </v-layout>
             <v-divider class='mt-1' dark></v-divider>
-            <v-list>
-                <v-list-tile v-for='rt in rotas' :key='rt.rota' v-if='!rt.sub' router :to='rt.rota'>
+            <v-list dark>
+                <!-- <v-list-tile v-for='rt in rotas' :key='rt.rota' v-if='!rt.sub' router :to='rt.rota'>
                     <v-list-tile-action>
                          <v-icon>{{rt.icone}}</v-icon>
                     </v-list-tile-action>
@@ -33,14 +33,25 @@
                             {{sub.nome}}
                         </v-list-tile-title>
                     </v-list-tile>
-                </v-list-group>
+                </v-list-group> -->
+                <MenuItem v-for='rt in rotas'
+                :key='rt.rota' 
+                :rota='rt.rota' 
+                :nome='rt.nome' 
+                :icone='rt.icone' 
+                :possuiSub='rt.sub!=undefined'
+                :sub='rt.sub'></MenuItem>
             </v-list>
         </v-navigation-drawer>
     </nav>
 </template>
 
 <script>
+    import MenuItem from '@/components/MenuItem'
     export default{
+        components: {
+            MenuItem
+        },
         data(){
             return{
                 menu: false,
@@ -64,6 +75,16 @@
                                 rota: '/planta2'
                             }
                         ]
+                    },
+                    {
+                        rota: '/processos',
+                        nome: 'Simulador de Processos',
+                        icone: 'polymer'
+                    },
+                    {
+                        rota: '/opcoes',
+                        nome: 'Opções',
+                        icone: 'settings'
                     }
                 ],
                 plantas: 3,

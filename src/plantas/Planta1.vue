@@ -1,6 +1,6 @@
 <template>
     <div class='planta1'>
-        PLANTA 1
+        <span>oi2</span>
     </div>
 </template>
 
