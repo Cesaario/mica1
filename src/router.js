@@ -4,8 +4,8 @@ import Principal from './views/Principal.vue'
 
 Vue.use(Router)
 
-import Plantas from '@/views/Plantas'
 import Planta1 from '@/plantas/Planta1'
+import Config from '@/views/Config'
 
 export default new Router({
   mode: 'history',
@@ -17,14 +17,12 @@ export default new Router({
       component: Principal
     },
     {
-      path:'/planta/:id',
-      component: Plantas,
-      children: [
-        {
-          path: 'planta1',
-          component: Planta1
-        }
-      ]
+      path: '/planta1',
+      component: Planta1
+    },
+    {
+      path: '/config',
+      component: Config
     }
   ]
 });

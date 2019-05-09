@@ -82,7 +82,7 @@
                         icone: 'polymer'
                     },
                     {
-                        rota: '/opcoes',
+                        rota: '/config',
                         nome: 'Opções',
                         icone: 'settings'
                     }

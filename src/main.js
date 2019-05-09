@@ -5,6 +5,13 @@ import router from './router'
 
 Vue.config.productionTip = false
 
+export const store = {
+  testMode: true,
+  atualizarTestMode(modo){
+    this.testMode = modo;
+  }
+}
+
 new Vue({
   router,
   render: h => h(App)

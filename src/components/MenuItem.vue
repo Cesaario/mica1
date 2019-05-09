@@ -13,7 +13,7 @@
                 </v-list-tile-content>
             </v-list-tile>
         </template>
-        <v-list-tile v-for='sb in sub' :key='sb.nome' router :to='rota + sb.rota'>
+        <v-list-tile v-for='sb in sub' :key='sb.nome' router :to='sb.rota'>
             <v-list-tile-action>
                 <v-icon>person</v-icon>
             </v-list-tile-action>
