@@ -1,5 +1,5 @@
 <template>
-    <v-bottom-nav :value="true" absolute color="grey" height='50px'>
+    <v-bottom-nav :value="true" color="grey" height='50px' fixed>
         <v-card v-for='obj in ioA' :key='obj.nome' :color='corEstado(obj.estado)'>
             <v-card-text class='ma-0 pa-0 text-xs-center'>{{obj.nome}}</v-card-text>
             <v-card-actions class='ma-0 pa-0' v-if='testMode'>
