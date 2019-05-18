@@ -6,6 +6,7 @@ Vue.use(Router)
 
 import Planta1 from '@/plantas/Planta1'
 import Config from '@/views/Config'
+import SimuladorProcessos from '@/views/SimuladorProcessos'
 
 export default new Router({
   mode: 'history',
@@ -23,6 +24,10 @@ export default new Router({
     {
       path: '/config',
       component: Config
+    },
+    {
+      path: '/processos',
+      component: SimuladorProcessos
     }
   ]
 });
