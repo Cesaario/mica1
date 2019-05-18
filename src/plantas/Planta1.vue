@@ -18,15 +18,15 @@
                 p5.setup = function(){
                     var canvas = p5.createCanvas(500, 500);
                     canvas.parent('canvasPlanta1');
-                    p5.ellipse(p5.width / 2, p5.height / 2, 500, 500);
                     img = p5.loadImage('img/PainelTanques1.png')
                 }
                 p5.windowResized = function(){
                     p5.resizeCanvas(p5.windowWidth, p5.windowHeight * 0.8);
                 }
                 p5.draw = function(){
-                    p5.ellipse(p5.width / 2, p5.height / 2, 100, 100);
                     p5.image(img, 0, 0, p5.windowWidth, p5.windowHeight * 0.8);
+                    p5.fill(255,0,0);
+                    p5.rect(p5.windowWidth * 0.1, p5.windowHeight * 0.1, p5.windowWidth * 0.5, p5.windowHeight * 0.5);
                 }
             }
             const P5 = require('p5');
