@@ -49,6 +49,7 @@
 <script>
     import MenuItem from '@/components/MenuItem'
     export default{
+        name: 'Navbar',
         components: {
             MenuItem
         },

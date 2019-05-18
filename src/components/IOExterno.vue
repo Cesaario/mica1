@@ -15,6 +15,7 @@
 <script>
     import {store} from '../main'
     export default{
+        name: 'IOExterno',
         data(){
             return{
                 ioA: [
