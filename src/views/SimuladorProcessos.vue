@@ -1,5 +1,7 @@
 <template>
-        <v-container fluid fill-height px-2 py-0>
+        <v-container fluid fill-height px-0 pt-0 pb-4>
+        <IOExternoLateral></IOExternoLateral>
+        <IOExterno></IOExterno>
             <v-layout column>
                 <v-flex xs1>
                     <v-layout row  fill-height>
@@ -31,14 +33,19 @@
                     </v-layout>
                 </v-flex>
             </v-layout>
+        <IOExternoLateral></IOExternoLateral>
         </v-container>
 </template>
 
 <script>
     import GraficoLinha from '@/components/GraficoLinha'
+    import IOExterno from '@/components/IOExterno'
+    import IOExternoLateral from '@/components/IOExternoLateral'
     export default{
         components:{
-            GraficoLinha
+            GraficoLinha,
+            IOExterno,
+            IOExternoLateral,
         },
         data(){
             return{
