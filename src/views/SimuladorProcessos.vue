@@ -1,6 +1,6 @@
 <template>
         <v-container fluid fill-height px-0 pt-0 pb-4>
-        <IOExternoLateral></IOExternoLateral>
+        <IOExternoLateral tipo='entrada'></IOExternoLateral>
         <IOExterno></IOExterno>
             <v-layout column>
                 <v-flex xs1>
@@ -33,7 +33,7 @@
                     </v-layout>
                 </v-flex>
             </v-layout>
-        <IOExternoLateral></IOExternoLateral>
+        <IOExternoLateral tipo='saida'></IOExternoLateral>
         </v-container>
 </template>
 
