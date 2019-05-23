@@ -7,7 +7,7 @@
 </template>
 
 <script>
-    import IOExterno from '@/components/IOExterno'
+    import IOExterno from '@/components/IOExterno';
     export default{
         components:{
             IOExterno
@@ -26,7 +26,6 @@
                 p5.draw = function(){
                     p5.image(img, 0, 0, p5.windowWidth, p5.windowHeight * 0.8);
                     p5.fill(255,0,0);
-                    p5.rect(p5.windowWidth * 0.1, p5.windowHeight * 0.1, p5.windowWidth * 0.5, p5.windowHeight * 0.5);
                 }
             }
             const P5 = require('p5');
