@@ -41,7 +41,7 @@
         },
         methods:{
             corEstado(i){
-                return i ? 'green' : 'grey';
+                return i ? 'green' : 'grey darken-1';
             },
             atualizarIO(i, valor){
                 this.io[i].estado = valor;
