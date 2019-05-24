@@ -36,7 +36,7 @@
                                 </v-card-actions>
                                 <v-divider></v-divider>
                                 <v-card-text class='pt-2 pb-1'>
-                                    <h6 class='title'>Escala de Tempo</h6>
+                                    <h6 class='title' @click.stop.prevent='clkRose()'>Escala de Tempo</h6>
                                 </v-card-text>
                                 <v-card-actions>
                                     <v-text-field box label="Multiplicador" hide-details v-model='dtSelecionado' @click='show'></v-text-field>
@@ -63,7 +63,14 @@
         <v-dialog v-model='tecladoVisivel' width='400'>
             <vue-touch-keyboard v-if="true" layout="numeric" :cancel="esconderTeclado" :input='inputTeclado'/> 
         </v-dialog>
-        
+        <v-dialog v-model='showRose'>
+            <v-layout justify-center>
+            <v-card width='500' class='text-xs-center'>
+                <h3 class='display-2 text-xs-center'>Rose</h3>
+                <v-img :src='require("@/assets/rose.jpg")' max-width='500' max height='300' position='center'></v-img>
+            </v-card>
+            </v-layout>
+        </v-dialog>
         </v-container>
 </template>
 
@@ -71,6 +78,7 @@
     import GraficoLinha from '@/components/GraficoLinha'
     import IOExterno from '@/components/IOExterno'
     import IOExternoLateral from '@/components/IOExternoLateral'
+    import {store} from '../main'
     export default{
         components:{
             GraficoLinha,
@@ -87,7 +95,10 @@
                 dtSelecionado: '',
                 escalaSelecionada: '',
                 tecladoVisivel: false,
-                inputTeclado: null
+                inputTeclado: null,
+                cntRose: 0,
+                showRose: false,
+                testMode: store.testMode,
             }
         },
         methods:{
@@ -111,6 +122,15 @@
             show(e){
                 this.tecladoVisivel = true;
                 this.inputTeclado = e.target;
+            },
+            clkRose(){
+                if(this.testMode){
+                    if(this.cntRose < 2){
+                        this.cntRose++;
+                    }else{
+                        this.showRose = true;
+                    }
+                }
             }
         },
         mounted(){
