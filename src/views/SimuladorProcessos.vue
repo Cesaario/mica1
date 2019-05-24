@@ -8,7 +8,7 @@
                         <v-flex xs12>
                             <v-card class='ma-2' tile height='90%'>
                                 <v-card-actions class='justify-center' fill-height>
-                                    <katex-element style='overflow: hidden; font-size: 22px' display-mode expression="G_4(S)=\frac{s+2}{s^2+2.7s^3+4.4s^2+4.7s+2}"/>
+                                    <katex-element style='overflow: hidden; font-size: 22px' display-mode expression="G(s)=\frac{s+2}{s^2+2.7s^3+4.4s^2+4.7s+2}"/>
                                 </v-card-actions>
                             </v-card>
                         </v-flex>
@@ -18,9 +18,35 @@
                     <v-layout row fill-height>
                         <v-flex xs2>
                             <v-card class='ma-2' tile height='90%'>
-                                <v-card-title>
-                                    OI2
+                                <v-card-title class='py-2'>
+                                    <h5 class='headline'>Configuração</h5>
                                 </v-card-title>
+                                <v-divider></v-divider>
+                                <v-card-text class='pb-1 pt-3'>
+                                    <h6 class='title'>Entrada</h6>
+                                </v-card-text>
+                                <v-card-actions>
+                                    <v-select box :items='entradas' label='Selecione' hide-details v-model='entradaSelecionada'></v-select>
+                                </v-card-actions>
+                                <v-card-text class='pt-2 pb-1'>
+                                    <h6 class='title'>Saida</h6>
+                                </v-card-text>
+                                <v-card-actions>
+                                    <v-select box :items='saidas' label='Selecione' hide-details v-model='saidaSelecionada'></v-select>
+                                </v-card-actions>
+                                <v-divider></v-divider>
+                                <v-card-text class='pt-2 pb-1'>
+                                    <h6 class='title'>Escala de Tempo</h6>
+                                </v-card-text>
+                                <v-card-actions>
+                                    <v-text-field box label="Multiplicador" hide-details v-model='dtSelecionado' @click='show'></v-text-field>
+                                </v-card-actions>
+                                <v-card-text class='pt-2 pb-1'>
+                                    <h6 class='title'>Passo de Tempo</h6>
+                                </v-card-text>
+                                <v-card-actions>
+                                    <v-text-field box label="Segundos" hide-details v-model='escalaSelecionada' @click='show'></v-text-field>
+                                </v-card-actions>
                             </v-card>
                         </v-flex>
                         <v-flex xs10>
@@ -34,6 +60,10 @@
                 </v-flex>
             </v-layout>
         <IOExternoLateral tipo='saida'></IOExternoLateral>
+        <v-dialog v-model='tecladoVisivel' width='400'>
+            <vue-touch-keyboard v-if="true" layout="numeric" :cancel="esconderTeclado" :input='inputTeclado'/> 
+        </v-dialog>
+        
         </v-container>
 </template>
 
@@ -49,7 +79,15 @@
         },
         data(){
             return{
-                dadosGrafico: {labels: ['1'], datasets: [{data: [1]}]}
+                dadosGrafico: {labels: ['1'], datasets: [{data: [1]}]},
+                entradas: ['E0', 'E1', 'E2', 'E3'],
+                saidas: ['S0', 'S1'],
+                entradaSelecionada: '',
+                saidaSelecionada: '',
+                dtSelecionado: '',
+                escalaSelecionada: '',
+                tecladoVisivel: false,
+                inputTeclado: null
             }
         },
         methods:{
@@ -62,10 +100,21 @@
                         data: [1,6,3,4,1]}
                     ]
                 }
+            },
+            esconderTeclado(){
+                this.tecladoVisivel = false;
+            },
+            mostrarTeclado(chamou){
+                this.tecladoVisivel = true;
+                this.chamouTeclado = chamou;
+            },
+            show(e){
+                this.tecladoVisivel = true;
+                this.inputTeclado = e.target;
             }
         },
         mounted(){
-            this.getData()
-        }
+            this.getData();
+        },
     }
 </script>
