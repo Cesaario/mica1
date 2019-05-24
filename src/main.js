@@ -6,8 +6,11 @@ import router from './router'
 import VueKatex from 'vue-katex'
 import 'katex/dist/katex.min.css';
 
+import VueTouchKeyboard from "vue-touch-keyboard";
+
 Vue.config.productionTip = false
 Vue.use(VueKatex)
+Vue.use(VueTouchKeyboard);
 
 export const store = {
   testMode: true,
