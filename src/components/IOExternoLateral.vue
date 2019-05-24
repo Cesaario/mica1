@@ -1,43 +1,36 @@
 <template>
     <div>
-        <v-navigation-drawer class='grey' permanent width='50'>
-            <v-list>
+        <v-navigation-drawer class='white' permanent width='50'>
+            <!-- <v-list>
                 <template v-for='(entrada,index) in io'>
-                    <v-list-tile :key='entrada.nome' @click.stop='dialogo[index]=true'>
+                    <v-list-tile :key='entrada.nome' @click.stop.prevent='ativar(index)'>
                         <v-list-tile-title>{{entrada.nome}}</v-list-tile-title>
                     </v-list-tile>
-                    <v-dialog :key='`${entrada.nome}dialogo`' v-model='dialogo[index]'>
+                    <v-dialog :key='`${entrada.nome}dialogo`' v-model='dialogo[index]' max-width="550">
                         <v-card>
-                            <v-card-title class="headline">Use Google's location service?</v-card-title>
-
-                            <v-card-text>
-                            Let Google help apps determine location. This means sending anonymous location data to Google, even when no apps are running.
-                            </v-card-text>
-
-                            <v-card-actions>
-                            <v-spacer></v-spacer>
-
-                            <v-btn
-                                color="green darken-1"
-                                flat="flat"
-                                @click="dialog = false"
-                            >
-                                Disagree
-                            </v-btn>
-
-                            <v-btn
-                                color="green darken-1"
-                                flat="flat"
-                                @click="dialog = false"
-                            >
-                                Agree
-                            </v-btn>
-                            </v-card-actions>
+                            <v-card-title primary-title>
+                                <h3 class="headline pb-4">Selecione o valor de entrada simulada de {{entrada.nome}}</h3>
+                                <v-slider thumb-label v-model='entrada.valor' max='1' min='0' step='0.01'></v-slider>
+                            </v-card-title>
                         </v-card>
                     </v-dialog>
                     <v-divider dark :key='`entrada.nome${index}`'></v-divider>
                 </template>
-            </v-list>
+            </v-list> -->
+            <template v-for='(obj,index) in io' >
+                <v-card :key='`${obj.nome}-card`' :color='corValor(obj.valor)' @click.stop.prevent='ativar(index)'>
+                    <v-card-text>{{obj.nome}}</v-card-text>
+                </v-card>
+                <v-dialog :key='`${obj.nome}-dialogo`' v-model='dialogo[index]' max-width="550">
+                    <v-card>
+                        <v-card-title primary-title>
+                            <h3 class="headline pb-4">Selecione o valor de entrada simulada de {{obj.nome}}</h3>
+                            <v-slider class='px-2' thumb-label v-model='obj.valor' max='1' min='0' step='0.01'></v-slider>
+                        </v-card-title>
+                    </v-card>
+                </v-dialog>
+            </template>
+            
         </v-navigation-drawer>
     </div>
 </template>
@@ -77,6 +70,14 @@
             }
         },
         methods:{
+            ativar(index){
+                //this.dialogo[index] = true; O vue não suporta isso
+                if(this.testMode) this.dialogo.splice(index, 1, true)
+            },
+            corValor(valor){
+                var s = Math.floor(37 * valor);
+                return 'hsl(122,' + s + '%,49%)';
+            }
         },
         computed:{
             io: function(){
