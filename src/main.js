@@ -7,6 +7,7 @@ import VueKatex from 'vue-katex'
 import 'katex/dist/katex.min.css';
 
 import VueTouchKeyboard from "vue-touch-keyboard";
+import style from "vue-touch-keyboard/dist/vue-touch-keyboard.css"; // load default style
 
 Vue.config.productionTip = false
 Vue.use(VueKatex)
