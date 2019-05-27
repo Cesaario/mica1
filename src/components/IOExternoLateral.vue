@@ -72,7 +72,9 @@
         methods:{
             ativar(index){
                 //this.dialogo[index] = true; O vue não suporta isso
-                if(this.testMode) this.dialogo.splice(index, 1, true)
+                if(this.tipo == 'entrada'){
+                    if(this.testMode) this.dialogo.splice(index, 1, true)
+                }
             },
             corValor(valor){
                 var s = Math.floor(37 * valor);

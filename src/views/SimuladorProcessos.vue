@@ -5,10 +5,19 @@
             <v-layout column>
                 <v-flex xs1>
                     <v-layout row  fill-height>
-                        <v-flex xs12>
-                            <v-card class='ma-2' tile height='90%'>
+                        <v-flex xs8>
+                            <v-card class='ma-2' tile height='90%' @click.stop.prevent='mostrarInputFuncao()'>
                                 <v-card-actions class='justify-center' fill-height>
-                                    <katex-element style='overflow: hidden; font-size: 22px' display-mode expression="G(s)=\frac{s+2}{s^2+2.7s^3+4.4s^2+4.7s+2}"/>
+                                    <katex-element style='overflow: hidden; font-size: 22px' display-mode :expression="tf"/>
+                                </v-card-actions>
+                            </v-card>
+                        </v-flex>
+                        <v-flex xs4>
+                            <v-card class='ma-2' tile height='90%'>
+                                <v-card-actions max-height>
+                                    <v-btn class='ma-4' large color='success'>INICIAR</v-btn>
+                                    <v-spacer></v-spacer>
+                                    <v-btn class='ma-4' large color='error'>PARAR</v-btn>
                                 </v-card-actions>
                             </v-card>
                         </v-flex>
@@ -63,13 +72,32 @@
         <v-dialog v-model='tecladoVisivel' width='400'>
             <vue-touch-keyboard v-if="true" layout="numeric" :cancel="esconderTeclado" :input='inputTeclado'/> 
         </v-dialog>
-        <v-dialog v-model='showRose'>
+        <v-dialog v-model='showRose' width='500'>
             <v-layout justify-center>
             <v-card width='500' class='text-xs-center'>
                 <h3 class='display-2 text-xs-center'>Rose</h3>
                 <v-img :src='require("@/assets/rose.jpg")' max-width='500' max height='300' position='center'></v-img>
             </v-card>
             </v-layout>
+        </v-dialog>
+        <v-dialog v-model='inputFuncao' width='500'>
+            <v-card width='500'>
+                <v-card-title>
+                    <h5 class='headline'>Digite os valores da função de transferência</h5>
+                </v-card-title>
+                <v-card-text>
+                    <h6 class='title'>Numerador</h6>
+                </v-card-text>
+                <v-card-actions>
+                    <v-text-field box label="Coeficientes" hide-details v-model='tfNum' @click='show'></v-text-field>
+                </v-card-actions>
+                <v-card-text>
+                    <h6 class='title'>Denominador</h6>
+                </v-card-text>
+                <v-card-actions>
+                    <v-text-field box label="Coeficientes" hide-details v-model='tfDen' @click='show'></v-text-field>
+                </v-card-actions>
+            </v-card>
         </v-dialog>
         </v-container>
 </template>
@@ -99,6 +127,9 @@
                 cntRose: 0,
                 showRose: false,
                 testMode: store.testMode,
+                tfNum: '1',
+                tfDen: '1 10',
+                inputFuncao: false
             }
         },
         methods:{
@@ -131,10 +162,35 @@
                         this.showRose = true;
                     }
                 }
+            },
+            getTermo(vet){
+                var termo = '';
+                for(var i = 0; i < vet.length; i++){
+                    if(vet[i] == 0) continue;
+                    if(vet[i] > 0 && i != 0) termo += '+';
+                    if(i == vet.length-1){
+                        termo += vet[i]
+                    }else if(i == vet.length-2){
+                        if(vet[i] != 1) termo += vet[i]
+                        termo += 's'
+                    }else{
+                        if(vet[i] != 1) termo += vet[i]
+                        termo += 's^' + (vet.length-1-i)
+                    }
+                }
+                return termo;
+            },
+            mostrarInputFuncao(){
+                this.inputFuncao = !this.inputFuncao;
             }
         },
         mounted(){
             this.getData();
         },
+        computed: {
+            tf: function(){
+                return "G(s)=\\frac{"+this.getTermo(this.tfNum.split(' '))+"}{"+this.getTermo(this.tfDen.split(' '))+"}"
+            }
+        }
     }
 </script>
