@@ -15,9 +15,9 @@
                         <v-flex xs4>
                             <v-card class='ma-2' tile height='90%'>
                                 <v-card-actions max-height>
-                                    <v-btn class='ma-4' large color='success'>INICIAR</v-btn>
+                                    <v-btn class='ml-4 my-4' large color='success' @click.stop.prevent='iniciar()'>INICIAR</v-btn>
                                     <v-spacer></v-spacer>
-                                    <v-btn class='ma-4' large color='error'>PARAR</v-btn>
+                                    <v-btn class='mr-4 my-4' large color='error'>PARAR</v-btn>
                                 </v-card-actions>
                             </v-card>
                         </v-flex>
@@ -106,12 +106,17 @@
     import GraficoLinha from '@/components/GraficoLinha'
     import IOExterno from '@/components/IOExterno'
     import IOExternoLateral from '@/components/IOExternoLateral'
-    import {store} from '../main'
+    import {store} from '@/main'
+    import {bus} from '@/main'
+    import {definirBus} from '@/util/rungekutta'
     export default{
         components:{
             GraficoLinha,
             IOExterno,
             IOExternoLateral,
+        },
+        mounted(){
+            definirBus();
         },
         data(){
             return{
@@ -182,6 +187,9 @@
             },
             mostrarInputFuncao(){
                 this.inputFuncao = !this.inputFuncao;
+            },
+            iniciar(){
+                bus.$emit('iniciar', 'a');
             }
         },
         mounted(){
