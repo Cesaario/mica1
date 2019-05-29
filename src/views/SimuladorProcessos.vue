@@ -31,31 +31,33 @@
                                     <h5 class='headline'>Configuração</h5>
                                 </v-card-title>
                                 <v-divider></v-divider>
-                                <v-card-text class='pb-1 pt-3'>
-                                    <h6 class='title'>Entrada</h6>
-                                </v-card-text>
-                                <v-card-actions>
-                                    <v-select box :items='entradas' label='Selecione' hide-details v-model='entradaSelecionada'></v-select>
-                                </v-card-actions>
-                                <v-card-text class='pt-2 pb-1'>
-                                    <h6 class='title'>Saida</h6>
-                                </v-card-text>
-                                <v-card-actions>
-                                    <v-select box :items='saidas' label='Selecione' hide-details v-model='saidaSelecionada'></v-select>
-                                </v-card-actions>
-                                <v-divider></v-divider>
-                                <v-card-text class='pt-2 pb-1'>
-                                    <h6 class='title' @click.stop.prevent='clkRose()'>Escala de Tempo</h6>
-                                </v-card-text>
-                                <v-card-actions>
-                                    <v-text-field box label="Multiplicador" hide-details v-model='escalaSelecionada' @click='show'></v-text-field>
-                                </v-card-actions>
-                                <v-card-text class='pt-2 pb-1'>
-                                    <h6 class='title'>Passo de Tempo</h6>
-                                </v-card-text>
-                                <v-card-actions>
-                                    <v-text-field box label="Segundos" hide-details v-model='dtSelecionado' @click='show'></v-text-field>
-                                </v-card-actions>
+                                <v-form ref='inputValido'>
+                                    <v-card-text class='pb-1 pt-3'>
+                                        <h6 class='title'>Entrada</h6>
+                                    </v-card-text>
+                                    <v-card-actions>
+                                        <v-select box :items='entradas' label='Selecione' hide-details v-model='entradaSelecionada' :rules="[v => !!v || 'Item necessário']"></v-select>
+                                    </v-card-actions>
+                                    <v-card-text class='pt-2 pb-1'>
+                                        <h6 class='title'>Saida</h6>
+                                    </v-card-text>
+                                    <v-card-actions>
+                                        <v-select box :items='saidas' label='Selecione' hide-details v-model='saidaSelecionada' :rules="[v => !!v || 'Item necessário']"></v-select>
+                                    </v-card-actions>
+                                    <v-divider></v-divider>
+                                    <v-card-text class='pt-2 pb-1'>
+                                        <h6 class='title' @click.stop.prevent='clkRose()'>Escala de Tempo</h6>
+                                    </v-card-text>
+                                    <v-card-actions>
+                                        <v-text-field box label="Multiplicador" hide-details v-model='escalaSelecionada' @click='show' :rules="[v => (!isNaN(v) && v != '') || 'Valor necessário']"></v-text-field>
+                                    </v-card-actions>
+                                    <v-card-text class='pt-2 pb-1'>
+                                        <h6 class='title'>Passo de Tempo</h6>
+                                    </v-card-text>
+                                    <v-card-actions>
+                                        <v-text-field box label="Segundos" hide-details v-model='dtSelecionado' @click='show' :rules="[v => (!isNaN(v) && v != '') || 'Valor necessário']"></v-text-field>
+                                    </v-card-actions>
+                                </v-form>
                             </v-card>
                         </v-flex>
                         <v-flex xs10>
@@ -69,6 +71,8 @@
                 </v-flex>
             </v-layout>
         <IOExternoLateral tipo='saida'></IOExternoLateral>
+
+
         <v-dialog v-model='tecladoVisivel' width='400'>
             <vue-touch-keyboard v-if="true" layout="numeric" :cancel="esconderTeclado" :input='inputTeclado'/> 
         </v-dialog>
@@ -99,6 +103,14 @@
                 </v-card-actions>
             </v-card>
         </v-dialog>
+
+
+        <v-snackbar v-model='snackbarErroInput' top :timeout='5000'>
+            <span>Preencha todos os itens da configuração</span>
+            <v-btn flat @click='snackbarErroInput=false' color='red'>OK</v-btn>
+        </v-snackbar>
+
+
         </v-container>
 </template>
 
@@ -138,7 +150,8 @@
                     {nome: 'E1', valor: 0},
                     {nome: 'E2', valor: 0},
                     {nome: 'E3', valor: 0},
-                ]
+                ],
+                snackbarErroInput: false,
             }
         },
         methods:{
@@ -198,6 +211,10 @@
                 this.inputFuncao = !this.inputFuncao;
             },
             iniciar(){
+                if(!this.$refs.inputValido.validate()){
+                    this.snackbarErroInput = true;
+                    return;
+                }
                 this.resetSimul();
                 this.$socket.emit('valoresIniciais', JSON.stringify(this.tfNum.split(' ')), JSON.stringify(this.tfDen.split(' ')))
 
