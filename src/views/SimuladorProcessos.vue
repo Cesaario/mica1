@@ -4,7 +4,7 @@
         <IOExterno></IOExterno>
             <v-layout column>
                 <v-flex xs1>
-                    <v-layout row  fill-height>
+                    <v-layout row fill-height>
                         <v-flex xs8>
                             <v-card class='ma-2' tile height='90%' @click.stop.prevent='mostrarInputFuncao()'>
                                 <v-card-actions class='justify-center' fill-height>
@@ -25,48 +25,112 @@
                 </v-flex>
                 <v-flex xs11>
                     <v-layout row fill-height>
-                        <v-flex xs2>
-                            <v-card class='ma-2' tile height='90%'>
-                                <v-card-title class='py-2'>
-                                    <h5 class='headline'>Configuração</h5>
-                                </v-card-title>
-                                <v-divider></v-divider>
-                                <v-form ref='inputValido'>
-                                    <v-card-text class='pb-1 pt-3'>
-                                        <h6 class='title'>Entrada</h6>
-                                    </v-card-text>
-                                    <v-card-actions>
-                                        <v-select box :items='entradas' label='Selecione' hide-details v-model='entradaSelecionada' :rules="[v => !!v || 'Item necessário']"></v-select>
-                                    </v-card-actions>
-                                    <v-card-text class='pt-2 pb-1'>
-                                        <h6 class='title'>Saida</h6>
-                                    </v-card-text>
-                                    <v-card-actions>
-                                        <v-select box :items='saidas' label='Selecione' hide-details v-model='saidaSelecionada' :rules="[v => !!v || 'Item necessário']"></v-select>
-                                    </v-card-actions>
-                                    <v-divider></v-divider>
-                                    <v-card-text class='pt-2 pb-1'>
-                                        <h6 class='title' @click.stop.prevent='clkRose()'>Escala de Tempo</h6>
-                                    </v-card-text>
-                                    <v-card-actions>
-                                        <v-text-field box label="Multiplicador" hide-details v-model='escalaSelecionada' @click='show' :rules="[v => (!isNaN(v) && v != '') || 'Valor necessário']"></v-text-field>
-                                    </v-card-actions>
-                                    <v-card-text class='pt-2 pb-1'>
-                                        <h6 class='title'>Passo de Tempo</h6>
-                                    </v-card-text>
-                                    <v-card-actions>
-                                        <v-text-field box label="Segundos" hide-details v-model='dtSelecionado' @click='show' :rules="[v => (!isNaN(v) && v != '') || 'Valor necessário']"></v-text-field>
-                                    </v-card-actions>
-                                </v-form>
-                            </v-card>
-                        </v-flex>
-                        <v-flex xs10>
+                        <div>
+                                <v-navigation-drawer class='grey lighten-4' v-model='drawerConfig' :mini-variant.sync="mostrarConfig" hide-overlay stateless>
+                                <v-card class='ma-2' tile height='90%'>
+                                    <v-list>
+                                        <v-list-tile>
+                                            <v-list-tile-action>
+                                                <v-icon>settings</v-icon>
+                                            </v-list-tile-action>
+                                            <v-list-tile-content>
+                                                <v-list-tile-title>
+                                                    <p class='title'>Configuração</p>
+                                                </v-list-tile-title>
+                                            </v-list-tile-content>
+                                            <v-list-tile-action>
+                                                <v-btn icon @click.stop='mostrarConfig = !mostrarConfig'>
+                                                    <v-icon>chevron_left</v-icon>
+                                                </v-btn>
+                                            </v-list-tile-action>
+                                        </v-list-tile>
+                                        <v-divider></v-divider>
+                                        <v-form ref='inputValido'>
+
+                                            <v-list-tile>
+                                                <v-list-tile-action>
+                                                    <v-icon>call_received</v-icon>
+                                                </v-list-tile-action>
+                                                <v-list-tile-content>
+                                                    <v-list-tile-title>
+                                                        <h6 class='title'>Entrada</h6>
+                                                    </v-list-tile-title>
+                                                </v-list-tile-content>
+                                            </v-list-tile>
+                                            <v-list-tile>
+                                                <v-list-tile-content>
+                                                    <v-list-tile-action>
+                                                        <v-select v-if='!mostrarConfig' box :items='entradas' label='Selecione' hide-details v-model='entradaSelecionada' :rules="[v => !!v || 'Item necessário']"></v-select>
+                                                    </v-list-tile-action>
+                                                </v-list-tile-content>
+                                            </v-list-tile>
+
+                                            <v-list-tile>
+                                                <v-list-tile-action>
+                                                    <v-icon>call_made</v-icon>
+                                                </v-list-tile-action>
+                                                <v-list-tile-content>
+                                                    <v-list-tile-title>
+                                                        <h6 class='title'>Saida</h6>
+                                                    </v-list-tile-title>
+                                                </v-list-tile-content>
+                                            </v-list-tile>
+                                            <v-list-tile>
+                                                <v-list-tile-content>
+                                                    <v-list-tile-action>
+                                                        <v-select box :items='saidas' label='Selecione' hide-details v-model='saidaSelecionada' :rules="[v => !!v || 'Item necessário']"></v-select>
+                                                    </v-list-tile-action>
+                                                </v-list-tile-content>
+                                            </v-list-tile>
+
+                                            <v-list-tile>
+                                                <v-list-tile-action>
+                                                    <v-icon>clear</v-icon>
+                                                </v-list-tile-action>
+                                                <v-list-tile-content>
+                                                    <v-list-tile-title>
+                                                        <h6 class='title'>Escala de tempo</h6>
+                                                    </v-list-tile-title>
+                                                </v-list-tile-content>
+                                            </v-list-tile>
+                                            <v-list-tile>
+                                                <v-list-tile-content>
+                                                    <v-list-tile-action>
+                                                        <v-text-field box label="Multiplicador" hide-details v-model='escalaSelecionada' @click='show' :rules="[v => (!isNaN(v) && v != '') || 'Valor necessário']"></v-text-field>
+                                                    </v-list-tile-action>
+                                                </v-list-tile-content>
+                                            </v-list-tile>
+
+                                            <v-list-tile>
+                                                <v-list-tile-action>
+                                                    <v-icon>schedule</v-icon>
+                                                </v-list-tile-action>
+                                                <v-list-tile-content>
+                                                    <v-list-tile-title>
+                                                        <h6 class='title'>Passo de tempo</h6>
+                                                    </v-list-tile-title>
+                                                </v-list-tile-content>
+                                            </v-list-tile>
+                                            <v-list-tile>
+                                                <v-list-tile-content>
+                                                    <v-list-tile-action>
+                                                        <v-text-field box label="Segundos" hide-details v-model='dtSelecionado' @click='show' :rules="[v => (!isNaN(v) && v != '') || 'Valor necessário']"></v-text-field>                                                    </v-list-tile-action>
+                                                    </v-list-tile-action>
+                                                </v-list-tile-content>
+                                            </v-list-tile>
+
+                                        </v-form>
+                                    </v-list>
+                                </v-card>
+                            </v-navigation-drawer>
+                            </div>
+                            <v-flex>
                             <v-card class='ma-2' tile height='90%'>
                                 <v-card-actions style='height: 100%'>
                                     <GraficoLinha style='width: 100%; height: 100%' :chart-data='dadosGrafico' :options='{maintainAspectRatio: false}'></GraficoLinha>
                                 </v-card-actions>
                             </v-card>
-                        </v-flex>
+                            </v-flex>
                     </v-layout>
                 </v-flex>
             </v-layout>
@@ -152,6 +216,8 @@
                     {nome: 'E3', valor: 0},
                 ],
                 snackbarErroInput: false,
+                drawerConfig: true,
+                mostrarConfig: true
             }
         },
         methods:{
