@@ -1,6 +1,6 @@
 <template>
         <v-container fluid fill-height px-0 pt-0 pb-4>
-        <IOExternoLateral tipo='entrada'></IOExternoLateral>
+        <IOExternoLateral tipo='entrada' @atualizarEntradas='atualizarEntradas'></IOExternoLateral>
         <IOExterno></IOExterno>
             <v-layout column>
                 <v-flex xs1>
@@ -17,7 +17,7 @@
                                 <v-card-actions max-height>
                                     <v-btn class='ml-4 my-4' large color='success' @click.stop.prevent='iniciar()'>INICIAR</v-btn>
                                     <v-spacer></v-spacer>
-                                    <v-btn class='mr-4 my-4' large color='error'>PARAR</v-btn>
+                                    <v-btn class='mr-4 my-4' large color='error' @click.stop.prevent='parar()'>PARAR</v-btn>
                                 </v-card-actions>
                             </v-card>
                         </v-flex>
@@ -48,13 +48,13 @@
                                     <h6 class='title' @click.stop.prevent='clkRose()'>Escala de Tempo</h6>
                                 </v-card-text>
                                 <v-card-actions>
-                                    <v-text-field box label="Multiplicador" hide-details v-model='dtSelecionado' @click='show'></v-text-field>
+                                    <v-text-field box label="Multiplicador" hide-details v-model='escalaSelecionada' @click='show'></v-text-field>
                                 </v-card-actions>
                                 <v-card-text class='pt-2 pb-1'>
                                     <h6 class='title'>Passo de Tempo</h6>
                                 </v-card-text>
                                 <v-card-actions>
-                                    <v-text-field box label="Segundos" hide-details v-model='escalaSelecionada' @click='show'></v-text-field>
+                                    <v-text-field box label="Segundos" hide-details v-model='dtSelecionado' @click='show'></v-text-field>
                                 </v-card-actions>
                             </v-card>
                         </v-flex>
@@ -108,15 +108,11 @@
     import IOExternoLateral from '@/components/IOExternoLateral'
     import {store} from '@/main'
     import {bus} from '@/main'
-    import {definirBus} from '@/util/rungekutta'
     export default{
         components:{
             GraficoLinha,
             IOExterno,
             IOExternoLateral,
-        },
-        mounted(){
-            definirBus();
         },
         data(){
             return{
@@ -133,20 +129,33 @@
                 showRose: false,
                 testMode: store.testMode,
                 tfNum: '1',
-                tfDen: '1 10',
-                inputFuncao: false
+                tfDen: '1 1',
+                inputFuncao: false,
+                funcaoRelogio: null,
+                simul: {},
+                entradasAnalogicas: [
+                    {nome: 'E0', valor: 0},
+                    {nome: 'E1', valor: 0},
+                    {nome: 'E2', valor: 0},
+                    {nome: 'E3', valor: 0},
+                ]
             }
         },
         methods:{
             getData(){
                 this.dadosGrafico = {
-                    labels: ['1', '2', '3', '4', '5'],
+                    labels: this.simul.t_tend,
                     datasets: [
                         {label: 'teste',
-                        backgroundColor: '#4A148C',
-                        data: [1,6,3,4,1]}
+                        //backgroundColor: '#4A148C',
+                        backgroundColor: '',
+                        //data: [1,6,3,4,1]}
+                        data: this.simul.y_tend}
                     ]
                 }
+            },
+            atualizarEntradas(entradas){
+                this.entradasAnalogicas = entradas;
             },
             esconderTeclado(){
                 this.tecladoVisivel = false;
@@ -189,15 +198,108 @@
                 this.inputFuncao = !this.inputFuncao;
             },
             iniciar(){
-                bus.$emit('iniciar', 'a');
+                this.resetSimul();
+                this.$socket.emit('valoresIniciais', JSON.stringify(this.tfNum.split(' ')), JSON.stringify(this.tfDen.split(' ')))
+
+                this.simul.entrada = this.entradaComputada;
+                this.simul.escala = this.escalaTempoCopmutada;
+
+                this.simul.date = new Date();
+                this.simul.t0 = this.simul.date.getTime();
+                this.simul.tempoAtual = this.simul.date.getTime() - this.simul.t0;
+                this.simul.tempoAlvo = this.simul.tempoAtual + this.simul.dt;
+
+                this.simul.t_tend = [this.simul.tempoAlvo/1000]
+
+                this.relogio = setInterval(() => {
+                    this.simul.tempoAtual = new Date().getTime() - this.simul.t0;
+                    if(this.simul.tempoAtual <= 10000){ //Condição para parar a simulação
+                        if(this.simul.tempoAtual >= this.simul.tempoAlvo){
+                            this.simul.tempoAlvo += this.simul.dt;
+                            this.calculoODE();
+                            //Teoricamente não preciso atualizar o grafico manualmente
+                        }
+                    }
+                }, 50);
+            },
+            parar(){
+                console.log('parando...')
+                clearInterval(this.relogio);
+            },
+            calculoODE(){
+                this.$socket.emit('calculoODE',
+                                this.simul.entrada,
+                                this.simul.tempoAlvo/1000,
+                                this.simul.escala,
+                                this.simul.A, //NÃO VOU MANDAR O X VAZIO PORRA NENHUMA
+                                this.simul.B,
+                                this.simul.C,
+                                this.simul.x0,
+                                this.simul.t_tend,
+                                this.simul.u_tend,
+                                this.simul.y_tend,
+                                );
+            },
+            resetSimul(){
+                this.simul = {
+                    A: null,
+                    B: null,
+                    C: null,
+                    x0: null,
+                    n: null,
+                    date: null,
+                    t0: null,
+                    tempoAlvo: null,
+                    tempoAtual: null,
+                    dt: this.dtMillis,
+                    escala: 1,
+                    entrada: 0,
+                    t_tend: [],
+                    y_tend: [],
+                    u_tend: [],
+                    t: []
+                }
+            }
+        },
+        sockets: {
+            respostaValoresIniciais: function(resposta){
+                this.simul.A = JSON.parse(resposta.A);
+                this.simul.B = JSON.parse(resposta.B);
+                this.simul.C = JSON.parse(resposta.C);
+                this.simul.x0 = JSON.parse(resposta.x0);
+                this.simul.n = resposta.N;
+                console.log('recebi resposta inicial')
+            },
+            respostaODE: function(resposta){
+                this.simul.t = JSON.parse(resposta.t);
+                this.simul.t_tend = JSON.parse(resposta.t_tend);
+                this.simul.u_tend = JSON.parse(resposta.u_tend);
+                this.simul.y_tend = JSON.parse(resposta.y_tend);
+                this.simul.x0 = JSON.parse(resposta.x0);
+                this.getData();
             }
         },
         mounted(){
             this.getData();
+            this.resetSimul();
         },
         computed: {
             tf: function(){
                 return "G(s)=\\frac{"+this.getTermo(this.tfNum.split(' '))+"}{"+this.getTermo(this.tfDen.split(' '))+"}"
+            },
+            dtMillis: function(){
+                var val = parseFloat(this.dtSelecionado);
+                if(isNaN(val)){
+                    val = 0.1;
+                }
+                return val * 1000;
+            },
+            escalaTempoCopmutada: function(){
+                return parseFloat(this.escalaSelecionada);
+            },
+            entradaComputada: function(){
+                var obj = this.entradasAnalogicas.find(x=>x.nome=this.entradaSelecionada);
+                return obj.valor;
             }
         }
     }

@@ -37,6 +37,7 @@
 
 <script>
     import {store} from '../main'
+    import {bus} from '@/main'
     export default{
         name: 'IOExterno',
         props:{
@@ -79,6 +80,9 @@
             corValor(valor){
                 var s = Math.floor(37 * valor);
                 return 'hsl(122,' + s + '%,49%)';
+            },
+            retornarValorEntrada(){
+                console.log(this.entradasAnalogicas);
             }
         },
         computed:{
@@ -86,6 +90,14 @@
                 if(this.tipo == 'entrada'){
                     return this.entradasAnalogicas;
                 }else return this.saidasAnalogicas;
+            }
+        },
+        watch:{
+            entradasAnalogicas: {
+                handler: function(oldValue, newValue){
+                    this.$emit('atualizarEntradas', newValue);
+                },
+                deep: true
             }
         }
     }
