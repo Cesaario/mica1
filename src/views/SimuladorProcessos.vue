@@ -26,7 +26,7 @@
                 <v-flex xs11>
                     <v-layout row fill-height>
                         <div>
-                                <v-navigation-drawer class='grey lighten-4' v-model='drawerConfig' :mini-variant.sync="mostrarConfig" hide-overlay stateless>
+                            <v-navigation-drawer class='grey lighten-4' v-model='drawerConfig' :mini-variant.sync="mostrarConfig" hide-overlay stateless>
                                 <v-card class='ma-2' tile height='90%'>
                                     <v-list>
                                         <v-list-tile>
@@ -123,18 +123,18 @@
                                     </v-list>
                                 </v-card>
                             </v-navigation-drawer>
-                            </div>
-                            <v-flex>
+                        </div>
+                        <v-flex>
                             <v-card class='ma-2' tile height='90%'>
                                 <v-card-actions style='height: 100%'>
                                     <GraficoLinha style='width: 100%; height: 100%' :chart-data='dadosGrafico' :options='{maintainAspectRatio: false}'></GraficoLinha>
                                 </v-card-actions>
                             </v-card>
-                            </v-flex>
+                        </v-flex>
                     </v-layout>
                 </v-flex>
             </v-layout>
-        <IOExternoLateral tipo='saida'></IOExternoLateral>
+        <IOExternoLateral tipo='saida' :saidasAnalogicas='saidasAnalogicas'></IOExternoLateral>
 
 
         <v-dialog v-model='tecladoVisivel' width='400'>
@@ -195,10 +195,10 @@
                 dadosGrafico: {labels: ['1'], datasets: [{data: [1]}]},
                 entradas: ['E0', 'E1', 'E2', 'E3'],
                 saidas: ['S0', 'S1'],
-                entradaSelecionada: '',
-                saidaSelecionada: '',
-                dtSelecionado: '',
-                escalaSelecionada: '',
+                entradaSelecionada: 'E0',
+                saidaSelecionada: 'S0',
+                dtSelecionado: '0.1',
+                escalaSelecionada: '1',
                 tecladoVisivel: false,
                 inputTeclado: null,
                 cntRose: 0,
@@ -215,6 +215,10 @@
                     {nome: 'E2', valor: 0},
                     {nome: 'E3', valor: 0},
                 ],
+                saidasAnalogicas: [
+                    {nome: 'S0', valor: 0},
+                    {nome: 'S1', valor: 0}
+                ],
                 snackbarErroInput: false,
                 drawerConfig: true,
                 mostrarConfig: true
@@ -225,7 +229,7 @@
                 this.dadosGrafico = {
                     labels: this.simul.t_tend,
                     datasets: [
-                        {label: 'teste',
+                        {label: this.saidaSelecionada,
                         //backgroundColor: '#4A148C',
                         backgroundColor: '',
                         //data: [1,6,3,4,1]}
@@ -342,6 +346,14 @@
                     u_tend: [],
                     t: []
                 }
+            },
+            atualizarSaida(){
+                //Fiz assim pois do outro jeito estava com bug.
+                if(this.saidaSelecionada == 'S0'){
+                    this.saidasAnalogicas[0].valor = this.simul.y_tend[this.simul.y_tend.length-1];
+                }else if(this.saidaSelecionada == 'S1'){
+                    this.saidasAnalogicas[1].valor = this.simul.y_tend[this.simul.y_tend.length-1];
+                }
             }
         },
         sockets: {
@@ -351,7 +363,6 @@
                 this.simul.C = JSON.parse(resposta.C);
                 this.simul.x0 = JSON.parse(resposta.x0);
                 this.simul.n = resposta.N;
-                console.log('recebi resposta inicial')
             },
             respostaODE: function(resposta){
                 this.simul.t = JSON.parse(resposta.t);
@@ -359,6 +370,7 @@
                 this.simul.u_tend = JSON.parse(resposta.u_tend);
                 this.simul.y_tend = JSON.parse(resposta.y_tend);
                 this.simul.x0 = JSON.parse(resposta.x0);
+                this.atualizarSaida();
                 this.getData();
             }
         },

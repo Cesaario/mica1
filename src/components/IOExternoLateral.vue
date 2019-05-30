@@ -41,7 +41,8 @@
     export default{
         name: 'IOExterno',
         props:{
-            tipo: String
+            tipo: String,
+            saidasAnalogicas: Array
         },
         data(){
             return{
@@ -51,15 +52,15 @@
                     {nome: 'E2', valor: 0},
                     {nome: 'E3', valor: 0},
                 ],
-                saidasAnalogicas:[
+                /*saidasAnalogicas:[
                     {nome: 'S0', valor: 0},
                     {nome: 'S1', valor: 0}
-                ],
+                ],*/
                 testMode: store.testMode,
                 dialogo: []
             }
         },
-        created(){
+        mounted(){
             if(this.tipo == 'entrada'){
                 for(var i1 = 0; i1 < this.entradasAnalogicas.length; i1++){
                     this.dialogo.push(false);
