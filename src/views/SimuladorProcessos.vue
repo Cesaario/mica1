@@ -115,7 +115,7 @@
                                                 <v-list-tile-content>
                                                     <v-list-tile-action>
                                                         <v-text-field box label="Segundos" hide-details v-model='dtSelecionado' @click='show' :rules="[v => (!isNaN(v) && v != '') || 'Valor necessário']"></v-text-field>                                                    </v-list-tile-action>
-                                                    </v-list-tile-action>
+                                                    <!-- </v-list-tile-action> ????? -->
                                                 </v-list-tile-content>
                                             </v-list-tile>
 
