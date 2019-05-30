@@ -137,8 +137,8 @@
         <IOExternoLateral tipo='saida' :saidasAnalogicas='saidasAnalogicas'></IOExternoLateral>
 
 
-        <v-dialog v-model='tecladoVisivel' width='400'>
-            <vue-touch-keyboard v-if="true" layout="numeric" :cancel="esconderTeclado" :input='inputTeclado'/> 
+        <v-dialog v-model='tecladoVisivel' content-class="sem-sombra" width='800'>
+            <vue-touch-keyboard v-if="true" :layout="layoutTeclado" :cancel="esconderTeclado" :input='inputTeclado'/> 
         </v-dialog>
         <v-dialog v-model='showRose' width='500'>
             <v-layout justify-center>
@@ -183,7 +183,7 @@
     import IOExterno from '@/components/IOExterno'
     import IOExternoLateral from '@/components/IOExternoLateral'
     import {store} from '@/main'
-    import {bus} from '@/main'
+    import numerico from '@/layouts/numerico'
     export default{
         components:{
             GraficoLinha,
@@ -221,7 +221,8 @@
                 ],
                 snackbarErroInput: false,
                 drawerConfig: true,
-                mostrarConfig: true
+                mostrarConfig: true,
+                layoutTeclado: numerico.normal
             }
         },
         methods:{
@@ -399,3 +400,9 @@
         }
     }
 </script>
+
+<style>
+    .sem-sombra{
+        box-shadow: none;
+    }
+</style>
