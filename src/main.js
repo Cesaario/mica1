@@ -14,7 +14,7 @@ Vue.use(VueKatex)
 Vue.use(VueTouchKeyboard);
 
 Vue.use(new VueSocketIO({
-  debug: true,
+  debug: false,
   connection: 'http://localhost:2003'
 }))
 
