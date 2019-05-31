@@ -23,11 +23,11 @@
                         </v-flex>
                     </v-layout>
                 </v-flex>
-                <v-flex xs11>
+                <v-flex xs12>
                     <v-layout row fill-height>
                         <div>
                             <v-navigation-drawer class='grey lighten-4' v-model='drawerConfig' :mini-variant.sync="mostrarConfig" hide-overlay stateless>
-                                <v-card class='ma-2' tile height='90%'>
+                                <v-card class='my-2 ml-2' tile height='90%'>
                                     <v-list>
                                         <v-list-tile>
                                             <v-list-tile-action>
@@ -96,7 +96,7 @@
                                             <v-list-tile>
                                                 <v-list-tile-content>
                                                     <v-list-tile-action>
-                                                        <v-text-field box label="Multiplicador" hide-details v-model='escalaSelecionada' @click='show' :rules="[v => (!isNaN(v) && v != '') || 'Valor necessário']"></v-text-field>
+                                                        <v-text-field box label="Multiplicador" @click='show' hide-details v-model='escalaSelecionada' :rules="[v => (!isNaN(v) && v != '') || 'Valor necessário']"></v-text-field>
                                                     </v-list-tile-action>
                                                 </v-list-tile-content>
                                             </v-list-tile>
@@ -114,7 +114,7 @@
                                             <v-list-tile>
                                                 <v-list-tile-content>
                                                     <v-list-tile-action>
-                                                        <v-text-field box label="Segundos" hide-details v-model='dtSelecionado' @click='show' :rules="[v => (!isNaN(v) && v != '') || 'Valor necessário']"></v-text-field>                                                    </v-list-tile-action>
+                                                        <v-text-field box label="Segundos" hide-details @click='show' v-model='dtSelecionado' :rules="[v => (!isNaN(v) && v != '') || 'Valor necessário']"></v-text-field>                                                    </v-list-tile-action>
                                                     <!-- </v-list-tile-action> ????? -->
                                                 </v-list-tile-content>
                                             </v-list-tile>
@@ -124,13 +124,13 @@
                                 </v-card>
                             </v-navigation-drawer>
                         </div>
-                        <v-flex>
-                            <v-card class='ma-2' tile height='90%'>
+                        <div style='overflow-x: scroll; width: 100%'>
+                            <v-card class='mx-2 mt-2' tile height='93%'>
                                 <v-card-actions style='height: 100%'>
-                                    <GraficoLinha style='width: 100%; height: 100%' :chart-data='dadosGrafico' :options='{maintainAspectRatio: false}'></GraficoLinha>
+                                    <GraficoLinha style='width: 100%; height: 100%;' :chart-data='dadosGrafico' :options='{maintainAspectRatio: false, responsive: true}'></GraficoLinha>
                                 </v-card-actions>
                             </v-card>
-                        </v-flex>
+                        </div>
                     </v-layout>
                 </v-flex>
             </v-layout>
@@ -231,8 +231,7 @@
                     labels: this.simul.t_tend,
                     datasets: [
                         {label: this.saidaSelecionada,
-                        //backgroundColor: '#4A148C',
-                        backgroundColor: '',
+                        backgroundColor: 'rgba(15, 70, 160, 0.8)',
                         //data: [1,6,3,4,1]}
                         data: this.simul.y_tend}
                     ]
@@ -297,15 +296,15 @@
                 this.simul.tempoAtual = this.simul.date.getTime() - this.simul.t0;
                 this.simul.tempoAlvo = this.simul.tempoAtual + this.simul.dt;
 
-                this.simul.t_tend = [this.simul.tempoAlvo/1000]
+                this.simul.t_tend = [0]
+                this.simul.y_tend = [0]
 
                 this.relogio = setInterval(() => {
                     this.simul.tempoAtual = new Date().getTime() - this.simul.t0;
                     if(this.simul.tempoAtual <= 10000){ //Condição para parar a simulação
                         if(this.simul.tempoAtual >= this.simul.tempoAlvo){
-                            this.simul.tempoAlvo += this.simul.dt;
                             this.calculoODE();
-                            //Teoricamente não preciso atualizar o grafico manualmente
+                            this.simul.tempoAlvo += this.simul.dt;
                         }
                     }
                 }, 50);
