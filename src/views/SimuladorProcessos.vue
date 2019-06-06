@@ -127,7 +127,7 @@
                         <div style='overflow-x: scroll; width: 100%'>
                             <v-card class='mx-2 mt-2' tile height='93%'>
                                 <v-card-actions style='height: 100%'>
-                                    <GraficoLinha style='width: 100%; height: 100%;' :chart-data='dadosGrafico' :options='{maintainAspectRatio: false, responsive: true}'></GraficoLinha>
+                                    <GraficoLinha style='width: 100%; height: 100%;' :chart-data='dadosGrafico' :options='opcoesGrafico'></GraficoLinha>
                                 </v-card-actions>
                             </v-card>
                         </div>
@@ -193,6 +193,23 @@
         data(){
             return{
                 dadosGrafico: {labels: ['1'], datasets: [{data: [1]}]},
+                opcoesGrafico: {
+                    maintainAspectRatio: false,
+                    responsive: true,
+                    plugins: {
+                        zoom: {
+                            zoom: {
+                                enabled: true,
+                                mode: 'x',
+                                speed: 20
+                            },
+                            pan: {
+                                enabled: true,
+                                mode: 'x'
+                            }
+                        }
+                    }
+                },
                 entradas: ['E0', 'E1', 'E2', 'E3'],
                 saidas: ['S0', 'S1'],
                 entradaSelecionada: 'E0',

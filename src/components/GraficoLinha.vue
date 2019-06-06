@@ -1,5 +1,6 @@
 <script>
 import { Line, mixins } from 'vue-chartjs'
+import zoom from 'chartjs-plugin-zoom';
 const { reactiveProp } = mixins
 
 export default {
@@ -8,7 +9,8 @@ export default {
   mixins: [reactiveProp],
   props: ['options'],
   mounted () {
-    this.renderChart(this.chartData, this.options)
+    this.addPlugin(zoom);
+    this.renderChart(this.chartData, this.options);
   }
 }
 </script>
