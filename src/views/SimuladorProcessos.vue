@@ -5,7 +5,19 @@
             <v-layout column>
                 <v-flex xs1>
                     <v-layout row fill-height>
-                        <v-flex xs8>
+                        <v-flex xs4>
+                            <v-card class='ma-2' tile height='90%'>
+                                <v-card-actions class='justify-center' fill-height>
+                                    <v-card-title>
+                                        <h5 class='headline'>Modo de operação</h5>
+                                    </v-card-title>
+                                    <v-card-actions>
+                                        <v-select :items='modosDeOperação' v-model='modoSelecionado'></v-select>
+                                    </v-card-actions>
+                                </v-card-actions>
+                            </v-card>
+                        </v-flex>
+                        <v-flex xs4>
                             <v-card class='ma-2' tile height='90%' @click.stop.prevent='mostrarInputFuncao()'>
                                 <v-card-actions class='justify-center' fill-height>
                                     <katex-element style='overflow: hidden; font-size: 22px' display-mode :expression="tf"/>
@@ -45,8 +57,7 @@
                                             </v-list-tile-action>
                                         </v-list-tile>
                                         <v-divider></v-divider>
-                                        <v-form ref='inputValido'>
-
+                                        <v-form ref='inputValido' v-if='modoSelecionado=="Simulador de Processos"'>
                                             <v-list-tile>
                                                 <v-list-tile-action>
                                                     <v-icon>call_received</v-icon>
@@ -118,7 +129,25 @@
                                                     <!-- </v-list-tile-action> ????? -->
                                                 </v-list-tile-content>
                                             </v-list-tile>
-
+                                        </v-form>
+                                        <v-form v-if='modoSelecionado=="Osciloscópio"'>
+                                            <v-list-tile>
+                                                <v-list-tile-action>
+                                                    <v-icon>schedule</v-icon>
+                                                </v-list-tile-action>
+                                                <v-list-tile-content>
+                                                    <v-list-tile-title>
+                                                        <h6 class='title'>Passo de tempo</h6>
+                                                    </v-list-tile-title>
+                                                </v-list-tile-content>
+                                            </v-list-tile>
+                                            <v-list-tile>
+                                                <v-list-tile-content>
+                                                    <v-list-tile-action>
+                                                        <v-text-field box label="Segundos" hide-details @click='show' v-model='dtSelecionadoOsciloscopio' :rules="[v => (!isNaN(v) && v != '') || 'Valor necessário']"></v-text-field>                                                    </v-list-tile-action>
+                                                    <!-- </v-list-tile-action> ????? -->
+                                                </v-list-tile-content>
+                                            </v-list-tile>
                                         </v-form>
                                     </v-list>
                                 </v-card>
@@ -226,6 +255,7 @@
                 inputFuncao: false,
                 funcaoRelogio: null,
                 simul: {},
+                dadosOsciloscopio: {},
                 entradasAnalogicas: [
                     {nome: 'E0', valor: 0},
                     {nome: 'E1', valor: 0},
@@ -239,19 +269,53 @@
                 snackbarErroInput: false,
                 drawerConfig: true,
                 mostrarConfig: true,
-                layoutTeclado: numerico.normal
+                layoutTeclado: numerico.normal,
+                modoSelecionado: 'Simulador de Processos',
+                modosDeOperação: [
+                    'Simulador de Processos',
+                    'Osciloscópio'
+                ],
+                dtSelecionadoOsciloscopio: '0.1'
             }
         },
         methods:{
             getData(){
-                this.dadosGrafico = {
-                    labels: this.simul.t_tend,
-                    datasets: [
-                        {label: this.saidaSelecionada,
-                        backgroundColor: 'rgba(15, 70, 160, 0.8)',
-                        //data: [1,6,3,4,1]}
-                        data: this.simul.y_tend}
-                    ]
+                if(this.modoSelecionado == 'Simulador de Processos'){
+                    this.dadosGrafico = {
+                        labels: this.simul.t_tend,
+                        datasets: [
+                            {label: this.saidaSelecionada,
+                            backgroundColor: 'rgba(15, 70, 160, 0.8)',
+                            //data: [1,6,3,4,1]}
+                            data: this.simul.y_tend}
+                        ]
+                    }
+                }else if(this.modoSelecionado == 'Osciloscópio'){
+                    this.dadosGrafico = {
+                        labels: this.dadosOsciloscopio.t_tend,
+                        datasets: [
+                            {label: 'E0',
+                            backgroundColor: 'rgba(15, 70, 160, 0.8)',
+                            borderColor: 'rgba(15, 70, 160, 0.8)',
+                            data: this.dadosOsciloscopio.a_tend,
+                            fill: false},
+                            {label: 'E1',
+                            backgroundColor: 'rgba(46, 125, 50, 0.8)',
+                            borderColor: 'rgba(46, 125, 50, 0.8)',
+                            data: this.dadosOsciloscopio.b_tend,
+                            fill: false},
+                            {label: 'E2',
+                            backgroundColor: 'rgba(251, 192, 45, 0.8)',
+                            borderColor: 'rgba(251, 192, 45, 0.8)',
+                            data: this.dadosOsciloscopio.c_tend,
+                            fill: false},
+                            {label: 'E3',
+                            backgroundColor: 'rgba(183, 28, 28, 0.8)',
+                            borderColor: 'rgba(183, 28, 28, 0.8)',
+                            data: this.dadosOsciloscopio.d_tend,
+                            fill: false}
+                        ]
+                    }
                 }
             },
             atualizarEntradas(entradas){
@@ -298,36 +362,56 @@
                 this.inputFuncao = !this.inputFuncao;
             },
             iniciar(){
-                if(!this.$refs.inputValido.validate()){
-                    this.snackbarErroInput = true;
-                    return;
-                }
-                this.resetSimul();
-                this.$socket.emit('valoresIniciais', JSON.stringify(this.tfNum.split(' ')), JSON.stringify(this.tfDen.split(' ')))
-
-                this.simul.entrada = this.entradaComputada;
-                this.simul.escala = this.escalaTempoCopmutada;
-
-                this.simul.date = new Date();
-                this.simul.t0 = this.simul.date.getTime();
-                this.simul.tempoAtual = this.simul.date.getTime() - this.simul.t0;
-                this.simul.tempoAlvo = this.simul.tempoAtual + this.simul.dt;
-
-                this.simul.t_tend = [0]
-                this.simul.y_tend = [0]
-
-                this.relogio = setInterval(() => {
-                    this.simul.tempoAtual = new Date().getTime() - this.simul.t0;
-                    if(this.simul.tempoAtual <= 10000){ //Condição para parar a simulação
-                        if(this.simul.tempoAtual >= this.simul.tempoAlvo){
-                            this.calculoODE();
-                            this.simul.tempoAlvo += this.simul.dt;
-                        }
+                if(this.modoSelecionado == 'Simulador de Processos'){
+                    if(!this.$refs.inputValido.validate()){
+                        this.snackbarErroInput = true;
+                        return;
                     }
-                }, 50);
+                    this.resetSimul();
+                    this.$socket.emit('valoresIniciais', JSON.stringify(this.tfNum.split(' ')), JSON.stringify(this.tfDen.split(' ')))
+
+                    this.simul.entrada = this.entradaComputada;
+                    this.simul.escala = this.escalaTempoCopmutada;
+
+                    this.simul.date = new Date();
+                    this.simul.t0 = this.simul.date.getTime();
+                    this.simul.tempoAtual = this.simul.date.getTime() - this.simul.t0;
+                    this.simul.tempoAlvo = this.simul.tempoAtual + this.simul.dt;
+
+                    this.simul.t_tend = [0]
+                    this.simul.y_tend = [0]
+
+                    this.relogio = setInterval(() => {
+                        this.simul.tempoAtual = new Date().getTime() - this.simul.t0;
+                        if(this.simul.tempoAtual <= 10000){ //Condição para parar a simulação
+                            if(this.simul.tempoAtual >= this.simul.tempoAlvo){
+                                this.calculoODE();
+                                this.simul.tempoAlvo += this.simul.dt;
+                            }
+                        }
+                    }, 50);
+                }else if(this.modoSelecionado == 'Osciloscópio'){
+                    this.resetOsciloscopio();
+
+                    this.dadosOsciloscopio.date = new Date();
+                    this.dadosOsciloscopio.t0 = this.dadosOsciloscopio.date.getTime();
+                    this.dadosOsciloscopio.tempoAtual = new Date().getTime() - this.dadosOsciloscopio.t0;
+                    this.dadosOsciloscopio.tempoAlvo = this.dadosOsciloscopio.tempoAtual + this.simul.dt;
+
+                    this.relogio = setInterval(() => {
+                        this.dadosOsciloscopio.tempoAtual = new Date().getTime() - this.dadosOsciloscopio.t0;
+                        if(this.dadosOsciloscopio.tempoAtual <= 999999999){ //Condição para parar a simulação
+                            if(this.dadosOsciloscopio.tempoAtual >= this.dadosOsciloscopio.tempoAlvo){
+                                this.dadosOsciloscopio.t_tend.push((this.dadosOsciloscopio.tempoAtual/1000).toFixed(1));
+                                this.dadosOsciloscopio.tempoAlvo += this.dadosOsciloscopio.dt;
+                                this.leituraEntradas();
+                                this.getData();
+                            }
+                        }
+                    }, 50);
+                }
             },
             parar(){
-                console.log('parando...')
                 clearInterval(this.relogio);
             },
             calculoODE(){
@@ -343,6 +427,12 @@
                                 this.simul.u_tend,
                                 this.simul.y_tend,
                                 );
+            },
+            leituraEntradas(){
+                this.dadosOsciloscopio.a_tend.push(this.entradasAnalogicas[0].valor);
+                this.dadosOsciloscopio.b_tend.push(this.entradasAnalogicas[1].valor);
+                this.dadosOsciloscopio.c_tend.push(this.entradasAnalogicas[2].valor);
+                this.dadosOsciloscopio.d_tend.push(this.entradasAnalogicas[3].valor);
             },
             resetSimul(){
                 this.simul = {
@@ -362,6 +452,20 @@
                     y_tend: [],
                     u_tend: [],
                     t: []
+                }
+            },
+            resetOsciloscopio(){
+                this.dadosOsciloscopio = {
+                    date: null,
+                    t0: null,
+                    tempoAlvo: null,
+                    tempoAtual: null,
+                    dt: this.dtMillisOsciloscopio,
+                    t_tend: [],
+                    a_tend: [],
+                    b_tend: [],
+                    c_tend: [],
+                    d_tend: []
                 }
             },
             atualizarSaida(){
@@ -401,6 +505,13 @@
             },
             dtMillis: function(){
                 var val = parseFloat(this.dtSelecionado);
+                if(isNaN(val)){
+                    val = 0.1;
+                }
+                return val * 1000;
+            },
+            dtMillisOsciloscopio: function(){
+                var val = parseFloat(this.dtSelecionadoOsciloscopio);
                 if(isNaN(val)){
                     val = 0.1;
                 }
