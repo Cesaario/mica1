@@ -2,12 +2,15 @@ import eventlet
 import socketio
 import numpy as np
 import json
+import serial
 from scipy.integrate import odeint
 
 sio = socketio.Server()
 app = socketio.WSGIApp(sio, static_files={
     '/': {'content_type': 'text/html', 'filename': 'index.html'}
 })
+
+ser = serial.Serial('COM6')
 
 @sio.on('connect')
 def connect(sid, env):
@@ -16,6 +19,9 @@ def connect(sid, env):
 @sio.on('disconnect')
 def disconnect(sid):
     print('desconectado ', sid)
+
+####################################################################################
+#                            SIMULADOR DE PROCESSOS
 
 @sio.on('valoresIniciais')
 def valoresIniciais(sid, NumString, DenString):
@@ -65,12 +71,6 @@ def valoresIniciais(sid, entrada, tempoAlvo, escala, A, B, C, x0, t_tend, u_tend
 
 	x0 = np.squeeze(np.asarray(x0))
 	x = x0
-	
-	print(x0)
-	print(t)
-	print(A)
-	print(B)
-	print('------')
 
 	x = odeint(odeAxBu, x0, t, args=(entrada, A, B))
 	aux = np.ndarray.tolist(np.linspace(0, 3-1, 3))
@@ -89,6 +89,12 @@ def valoresIniciais(sid, entrada, tempoAlvo, escala, A, B, C, x0, t_tend, u_tend
 
 	sio.emit('respostaODE', {'t':json.dumps(t.tolist()),'t_tend':json.dumps(t_tend.tolist()),'u_tend':json.dumps(u_tend.tolist()),'y_tend':json.dumps(y_tend.tolist()),'x0':json.dumps(x0.tolist())})
 
+####################################################################################
+#                        COMUNICAÇÃO SERIAL
+
+@sio.on('escreverSaida')
+def escreverSaida(sid, saida, valor):
+	ser.write('1:1.1'.encode())
 
 if __name__ == '__main__':
     eventlet.wsgi.server(eventlet.listen(('', 2003)), app)
