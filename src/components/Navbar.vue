@@ -13,34 +13,14 @@
             </v-layout>
             <v-divider class='mt-1' dark></v-divider>
             <v-list dark>
-                <!-- <v-list-tile v-for='rt in rotas' :key='rt.rota' v-if='!rt.sub' router :to='rt.rota'>
-                    <v-list-tile-action>
-                         <v-icon>{{rt.icone}}</v-icon>
-                    </v-list-tile-action>
-                    <v-list-tile-title>{{rt.nome}}</v-list-tile-title>
-                </v-list-tile>
-                <v-list-group v-for='rt in rotas'  :key='rt.rota' v-if='rt.sub' :prepend-icon='rt.icone'>
-                    <template v-slot:activator>
-                        <v-list-tile>
-                            <v-list-tile-title>{{rt.nome}}</v-list-tile-title>
-                        </v-list-tile>
-                    </template>
-                    <v-list-tile v-for='sub in rt.sub' :key='sub.rota' router :to='rt.rota + sub.rota'>
-                        <v-list-tile-action>
-                            <v-icon>person</v-icon>
-                        </v-list-tile-action>
-                        <v-list-tile-title>
-                            {{sub.nome}}
-                        </v-list-tile-title>
-                    </v-list-tile>
-                </v-list-group> -->
                 <MenuItem v-for='rt in rotas'
-                :key='rt.rota' 
-                :rota='rt.rota' 
-                :nome='rt.nome' 
-                :icone='rt.icone' 
-                :possuiSub='rt.sub!=undefined'
-                :sub='rt.sub'></MenuItem>
+                    :key='rt.rota' 
+                    :rota='rt.rota' 
+                    :nome='rt.nome' 
+                    :icone='rt.icone' 
+                    :possuiSub='rt.sub!=undefined'
+                    :sub='rt.sub'>
+                </MenuItem>
             </v-list>
         </v-navigation-drawer>
     </nav>
@@ -81,6 +61,11 @@
                         rota: '/processos',
                         nome: 'Simulador de Processos',
                         icone: 'polymer'
+                    },
+                    {
+                        rota: '/osciloscopio',
+                        nome: 'Osciloscópio',
+                        icone: 'video_label'
                     },
                     {
                         rota: '/config',

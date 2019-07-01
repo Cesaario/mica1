@@ -7,6 +7,7 @@ Vue.use(Router)
 import Planta1 from '@/plantas/Planta1'
 import Config from '@/views/Config'
 import SimuladorProcessos from '@/views/SimuladorProcessos'
+import Osciloscopio from '@/views/Osciloscopio'
 
 export default new Router({
   mode: 'history',
@@ -28,6 +29,10 @@ export default new Router({
     {
       path: '/processos',
       component: SimuladorProcessos
+    },
+    {
+      path: '/osciloscopio',
+      component: Osciloscopio
     }
   ]
 });

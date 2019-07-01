@@ -10,8 +10,6 @@ app = socketio.WSGIApp(sio, static_files={
     '/': {'content_type': 'text/html', 'filename': 'index.html'}
 })
 
-ser = serial.Serial('COM6')
-
 @sio.on('connect')
 def connect(sid, env):
     print('conectado ', sid)

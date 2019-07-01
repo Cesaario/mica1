@@ -3,38 +3,6 @@
         <IOExternoLateral tipo='entrada' @atualizarEntradas='atualizarEntradas'></IOExternoLateral>
         <IOExterno></IOExterno>
             <v-layout column>
-                <v-flex xs1>
-                    <v-layout row fill-height>
-                        <v-flex xs4>
-                            <v-card class='ma-2' tile height='90%'>
-                                <v-card-actions class='justify-center' fill-height>
-                                    <v-card-title>
-                                        <h5 class='headline'>Modo de operação</h5>
-                                    </v-card-title>
-                                    <v-card-actions>
-                                        <v-select :items='modosDeOperação' v-model='modoSelecionado'></v-select>
-                                    </v-card-actions>
-                                </v-card-actions>
-                            </v-card>
-                        </v-flex>
-                        <v-flex xs4>
-                            <v-card class='ma-2' tile height='90%' @click.stop.prevent='mostrarInputFuncao()'>
-                                <v-card-actions class='justify-center' fill-height>
-                                    <katex-element style='overflow: hidden; font-size: 22px' display-mode :expression="tf"/>
-                                </v-card-actions>
-                            </v-card>
-                        </v-flex>
-                        <v-flex xs4>
-                            <v-card class='ma-2' tile height='90%'>
-                                <v-card-actions max-height>
-                                    <v-btn class='ml-4 my-4' large color='success' @click.stop.prevent='iniciar()'>INICIAR</v-btn>
-                                    <v-spacer></v-spacer>
-                                    <v-btn class='mr-4 my-4' large color='error' @click.stop.prevent='parar()'>PARAR</v-btn>
-                                </v-card-actions>
-                            </v-card>
-                        </v-flex>
-                    </v-layout>
-                </v-flex>
                 <v-flex xs12>
                     <v-layout row fill-height>
                         <div>
@@ -57,80 +25,7 @@
                                             </v-list-tile-action>
                                         </v-list-tile>
                                         <v-divider></v-divider>
-                                        <v-form ref='inputValido' v-if='modoSelecionado=="Simulador de Processos"'>
-                                            <v-list-tile>
-                                                <v-list-tile-action>
-                                                    <v-icon>call_received</v-icon>
-                                                </v-list-tile-action>
-                                                <v-list-tile-content>
-                                                    <v-list-tile-title>
-                                                        <h6 class='title'>Entrada</h6>
-                                                    </v-list-tile-title>
-                                                </v-list-tile-content>
-                                            </v-list-tile>
-                                            <v-list-tile>
-                                                <v-list-tile-content>
-                                                    <v-list-tile-action>
-                                                        <v-select v-if='!mostrarConfig' box :items='entradas' label='Selecione' hide-details v-model='entradaSelecionada' :rules="[v => !!v || 'Item necessário']"></v-select>
-                                                    </v-list-tile-action>
-                                                </v-list-tile-content>
-                                            </v-list-tile>
-
-                                            <v-list-tile>
-                                                <v-list-tile-action>
-                                                    <v-icon>call_made</v-icon>
-                                                </v-list-tile-action>
-                                                <v-list-tile-content>
-                                                    <v-list-tile-title>
-                                                        <h6 class='title'>Saida</h6>
-                                                    </v-list-tile-title>
-                                                </v-list-tile-content>
-                                            </v-list-tile>
-                                            <v-list-tile>
-                                                <v-list-tile-content>
-                                                    <v-list-tile-action>
-                                                        <v-select box :items='saidas' label='Selecione' hide-details v-model='saidaSelecionada' :rules="[v => !!v || 'Item necessário']"></v-select>
-                                                    </v-list-tile-action>
-                                                </v-list-tile-content>
-                                            </v-list-tile>
-
-                                            <v-list-tile>
-                                                <v-list-tile-action>
-                                                    <v-icon>clear</v-icon>
-                                                </v-list-tile-action>
-                                                <v-list-tile-content>
-                                                    <v-list-tile-title>
-                                                        <h6 class='title'>Escala de tempo</h6>
-                                                    </v-list-tile-title>
-                                                </v-list-tile-content>
-                                            </v-list-tile>
-                                            <v-list-tile>
-                                                <v-list-tile-content>
-                                                    <v-list-tile-action>
-                                                        <v-text-field box label="Multiplicador" @click='show' hide-details v-model='escalaSelecionada' :rules="[v => (!isNaN(v) && v != '') || 'Valor necessário']"></v-text-field>
-                                                    </v-list-tile-action>
-                                                </v-list-tile-content>
-                                            </v-list-tile>
-
-                                            <v-list-tile>
-                                                <v-list-tile-action>
-                                                    <v-icon>schedule</v-icon>
-                                                </v-list-tile-action>
-                                                <v-list-tile-content>
-                                                    <v-list-tile-title>
-                                                        <h6 class='title'>Passo de tempo</h6>
-                                                    </v-list-tile-title>
-                                                </v-list-tile-content>
-                                            </v-list-tile>
-                                            <v-list-tile>
-                                                <v-list-tile-content>
-                                                    <v-list-tile-action>
-                                                        <v-text-field box label="Segundos" hide-details @click='show' v-model='dtSelecionado' :rules="[v => (!isNaN(v) && v != '') || 'Valor necessário']"></v-text-field>                                                    </v-list-tile-action>
-                                                    <!-- </v-list-tile-action> ????? -->
-                                                </v-list-tile-content>
-                                            </v-list-tile>
-                                        </v-form>
-                                        <v-form v-if='modoSelecionado=="Osciloscópio"'>
+                                        <v-form>
                                             <v-list-tile>
                                                 <v-list-tile-action>
                                                     <v-icon>schedule</v-icon>
@@ -149,6 +44,13 @@
                                                 </v-list-tile-content>
                                             </v-list-tile>
                                         </v-form>
+                                        <v-card-actions class="justify-center">
+                                            <v-layout row>
+                                                <v-btn v-if='!mostrarConfig' large color='success' class='ma-2' @click.stop.prevent='iniciar()'>INICIAR</v-btn>
+                                                <v-spacer></v-spacer>
+                                                <v-btn v-if='!mostrarConfig' large color='error' class='ma-2' @click.stop.prevent='parar()'>PARAR</v-btn>
+                                            </v-layout>
+                                        </v-card-actions>
                                     </v-list>
                                 </v-card>
                             </v-navigation-drawer>
@@ -230,7 +132,7 @@
                             zoom: {
                                 enabled: true,
                                 mode: 'x',
-                                speed: 20
+                                speed: 100
                             },
                             pan: {
                                 enabled: true,
@@ -270,52 +172,35 @@
                 drawerConfig: true,
                 mostrarConfig: true,
                 layoutTeclado: numerico.normal,
-                modoSelecionado: 'Simulador de Processos',
-                modosDeOperação: [
-                    'Simulador de Processos',
-                    'Osciloscópio'
-                ],
                 dtSelecionadoOsciloscopio: '0.1'
             }
         },
         methods:{
             getData(){
-                if(this.modoSelecionado == 'Simulador de Processos'){
-                    this.dadosGrafico = {
-                        labels: this.simul.t_tend,
-                        datasets: [
-                            {label: this.saidaSelecionada,
-                            backgroundColor: 'rgba(15, 70, 160, 0.8)',
-                            //data: [1,6,3,4,1]}
-                            data: this.simul.y_tend}
-                        ]
-                    }
-                }else if(this.modoSelecionado == 'Osciloscópio'){
-                    this.dadosGrafico = {
-                        labels: this.dadosOsciloscopio.t_tend,
-                        datasets: [
-                            {label: 'E0',
-                            backgroundColor: 'rgba(15, 70, 160, 0.8)',
-                            borderColor: 'rgba(15, 70, 160, 0.8)',
-                            data: this.dadosOsciloscopio.a_tend,
-                            fill: false},
-                            {label: 'E1',
-                            backgroundColor: 'rgba(46, 125, 50, 0.8)',
-                            borderColor: 'rgba(46, 125, 50, 0.8)',
-                            data: this.dadosOsciloscopio.b_tend,
-                            fill: false},
-                            {label: 'E2',
-                            backgroundColor: 'rgba(251, 192, 45, 0.8)',
-                            borderColor: 'rgba(251, 192, 45, 0.8)',
-                            data: this.dadosOsciloscopio.c_tend,
-                            fill: false},
-                            {label: 'E3',
-                            backgroundColor: 'rgba(183, 28, 28, 0.8)',
-                            borderColor: 'rgba(183, 28, 28, 0.8)',
-                            data: this.dadosOsciloscopio.d_tend,
-                            fill: false}
-                        ]
-                    }
+                this.dadosGrafico = {
+                    labels: this.dadosOsciloscopio.t_tend,
+                    datasets: [
+                        {label: 'E0',
+                        backgroundColor: 'rgba(15, 70, 160, 0.8)',
+                        borderColor: 'rgba(15, 70, 160, 0.8)',
+                        data: this.dadosOsciloscopio.a_tend,
+                        fill: false},
+                        {label: 'E1',
+                        backgroundColor: 'rgba(46, 125, 50, 0.8)',
+                        borderColor: 'rgba(46, 125, 50, 0.8)',
+                        data: this.dadosOsciloscopio.b_tend,
+                        fill: false},
+                        {label: 'E2',
+                        backgroundColor: 'rgba(251, 192, 45, 0.8)',
+                        borderColor: 'rgba(251, 192, 45, 0.8)',
+                        data: this.dadosOsciloscopio.c_tend,
+                        fill: false},
+                        {label: 'E3',
+                        backgroundColor: 'rgba(183, 28, 28, 0.8)',
+                        borderColor: 'rgba(183, 28, 28, 0.8)',
+                        data: this.dadosOsciloscopio.d_tend,
+                        fill: false}
+                    ]
                 }
             },
             atualizarEntradas(entradas){
@@ -362,54 +247,24 @@
                 this.inputFuncao = !this.inputFuncao;
             },
             iniciar(){
-                if(this.modoSelecionado == 'Simulador de Processos'){
-                    if(!this.$refs.inputValido.validate()){
-                        this.snackbarErroInput = true;
-                        return;
-                    }
-                    this.resetSimul();
-                    this.$socket.emit('valoresIniciais', JSON.stringify(this.tfNum.split(' ')), JSON.stringify(this.tfDen.split(' ')))
+                this.resetOsciloscopio();
 
-                    this.simul.entrada = this.entradaComputada;
-                    this.simul.escala = this.escalaTempoCopmutada;
+                this.dadosOsciloscopio.date = new Date();
+                this.dadosOsciloscopio.t0 = this.dadosOsciloscopio.date.getTime();
+                this.dadosOsciloscopio.tempoAtual = new Date().getTime() - this.dadosOsciloscopio.t0;
+                this.dadosOsciloscopio.tempoAlvo = this.dadosOsciloscopio.tempoAtual + this.simul.dt;
 
-                    this.simul.date = new Date();
-                    this.simul.t0 = this.simul.date.getTime();
-                    this.simul.tempoAtual = this.simul.date.getTime() - this.simul.t0;
-                    this.simul.tempoAlvo = this.simul.tempoAtual + this.simul.dt;
-
-                    this.simul.t_tend = [0]
-                    this.simul.y_tend = [0]
-
-                    this.relogio = setInterval(() => {
-                        this.simul.tempoAtual = new Date().getTime() - this.simul.t0;
-                        if(this.simul.tempoAtual <= 10000){ //Condição para parar a simulação
-                            if(this.simul.tempoAtual >= this.simul.tempoAlvo){
-                                this.calculoODE();
-                                this.simul.tempoAlvo += this.simul.dt;
-                            }
-                        }
-                    }, 50);
-                }else if(this.modoSelecionado == 'Osciloscópio'){
-                    this.resetOsciloscopio();
-
-                    this.dadosOsciloscopio.date = new Date();
-                    this.dadosOsciloscopio.t0 = this.dadosOsciloscopio.date.getTime();
+                this.relogio = setInterval(() => {
                     this.dadosOsciloscopio.tempoAtual = new Date().getTime() - this.dadosOsciloscopio.t0;
-                    this.dadosOsciloscopio.tempoAlvo = this.dadosOsciloscopio.tempoAtual + this.simul.dt;
-
-                    this.relogio = setInterval(() => {
-                        this.dadosOsciloscopio.tempoAtual = new Date().getTime() - this.dadosOsciloscopio.t0;
-                        if(this.dadosOsciloscopio.tempoAtual <= 999999999){ //Condição para parar a simulação
-                            if(this.dadosOsciloscopio.tempoAtual >= this.dadosOsciloscopio.tempoAlvo){
-                                this.dadosOsciloscopio.t_tend.push((this.dadosOsciloscopio.tempoAtual/1000).toFixed(1));
-                                this.dadosOsciloscopio.tempoAlvo += this.dadosOsciloscopio.dt;
-                                this.leituraEntradas();
-                                this.getData();
-                            }
+                    if(this.dadosOsciloscopio.tempoAtual <= 999999999){ //Condição para parar a simulação
+                        if(this.dadosOsciloscopio.tempoAtual >= this.dadosOsciloscopio.tempoAlvo){
+                            this.dadosOsciloscopio.t_tend.push((this.dadosOsciloscopio.tempoAtual/1000).toFixed(1));
+                            this.dadosOsciloscopio.tempoAlvo += this.dadosOsciloscopio.dt;
+                            this.leituraEntradas();
+                            this.getData();
                         }
-                    }, 50);
-                }
+                    }
+                }, 50);
             },
             parar(){
                 clearInterval(this.relogio);
