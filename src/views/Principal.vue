@@ -1,26 +1,45 @@
 <template>
-  <v-layout>
-    <v-flex xs12 sm6 offset-sm3>
-      <v-card>
-        <v-img
-          src="http://www.coltec.ufmg.br/coltec-ufmg/wp-content/uploads/2018/06/escrito.png"
-          aspect-ratio="5.2"
-        ></v-img>
-
-        <v-card-title primary-title>
-          <div>
-            <h3 class="headline mb-0">Colégio Técnico</h3>
-            <div> {{ card_text }} </div>
-          </div>
-        </v-card-title>
-
-        <v-card-actions>
-          <v-btn flat color="orange">Share</v-btn>
-          <v-btn flat color="orange">Explore</v-btn>
-        </v-card-actions>
-      </v-card>
-    </v-flex>
-  </v-layout>
+    <v-layout row>
+        <v-flex xs12>
+            <v-container>
+                <v-layout row wrap>
+                    <v-flex xs6 class='pa-4'>
+                        <v-card>
+                            <v-img src="@/assets/desert.jpg" aspect-ratio='2.75'></v-img>
+                            <v-card-title primary-title class="headline mb-0">
+                                Texto1
+                            </v-card-title>
+                        </v-card>
+                    </v-flex>
+                    <v-flex xs6 class='pa-4'>
+                        <v-card>
+                            <v-img src="@/assets/desert.jpg" aspect-ratio='2.75'></v-img>
+                            <v-card-title primary-title class="headline mb-0">
+                                Texto2
+                            </v-card-title>
+                        </v-card>
+                    </v-flex>
+                    <v-flex xs6 class='pa-4'>
+                        <v-card>
+                            <v-img src="@/assets/desert.jpg" aspect-ratio='2.75'></v-img>
+                            <v-card-title primary-title class="headline mb-0">
+                                Texto3
+                            </v-card-title>
+                        </v-card>
+                    </v-flex>
+                    <v-flex xs6 class='pa-4'>
+                        <v-card>
+                            <v-img src="@/assets/desert.jpg" aspect-ratio='2.75'></v-img>
+                            <v-card-title primary-title class="headline mb-0">
+                                Texto4
+                            </v-card-title>
+                        </v-card>
+                    </v-flex>
+                </v-layout>
+                
+            </v-container>
+        </v-flex>
+    </v-layout>
 </template>
 
 <script>
