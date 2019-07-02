@@ -3,13 +3,13 @@
         <v-list-tile-action>
             <v-icon>{{icone}}</v-icon>
         </v-list-tile-action>
-        <v-list-tile-title>{{nome}}</v-list-tile-title>
+        <v-list-tile-title class='headline' style='overflow: visible;'>{{nome}}</v-list-tile-title>
     </v-list-tile>
     <v-list-group v-else :prepend-icon='icone'>
         <template v-slot:activator>
             <v-list-tile>
                 <v-list-tile-content>
-                    <v-list-tile-title>{{nome}}</v-list-tile-title>
+                    <v-list-tile-title class='headline'>{{nome}}</v-list-tile-title>
                 </v-list-tile-content>
             </v-list-tile>
         </template>

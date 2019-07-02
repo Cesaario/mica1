@@ -6,7 +6,7 @@
                 <v-flex xs12>
                     <v-layout row fill-height>
                         <div>
-                            <v-navigation-drawer class='grey lighten-4' v-model='drawerConfig' :mini-variant.sync="mostrarConfig" hide-overlay stateless>
+                            <v-navigation-drawer class='grey lighten-4' v-model='drawerConfig' :mini-variant.sync="mostrarConfig" hide-overlay stateless width="350">
                                 <v-card class='my-2 ml-2' tile height='90%'>
                                     <v-list>
                                         <v-list-tile>
@@ -46,9 +46,13 @@
                                         </v-form>
                                         <v-card-actions class="justify-center">
                                             <v-layout row>
-                                                <v-btn v-if='!mostrarConfig' large color='success' class='ma-2' @click.stop.prevent='iniciar()'>INICIAR</v-btn>
+                                                <v-btn v-if='!mostrarConfig' large color='success' class='ma-2' @click.stop.prevent='iniciar()'>
+                                                    <span class='headline'>INICIAR</span>
+                                                </v-btn>
                                                 <v-spacer></v-spacer>
-                                                <v-btn v-if='!mostrarConfig' large color='error' class='ma-2' @click.stop.prevent='parar()'>PARAR</v-btn>
+                                                <v-btn v-if='!mostrarConfig' large color='error' class='ma-2' @click.stop.prevent='parar()'>
+                                                    <span class='headline'>PARAR</span>
+                                                </v-btn>
                                             </v-layout>
                                         </v-card-actions>
                                     </v-list>

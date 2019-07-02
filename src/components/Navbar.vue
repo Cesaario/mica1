@@ -3,11 +3,11 @@
         <v-toolbar flat app>
             <v-toolbar-side-icon class='grey--text' @click.stop.prevent='toggleMenu()'></v-toolbar-side-icon>
             <v-toolbar-title class='grey--text'>
-                <span class='font-weight-light'>MICA</span>
-                <span class='font-weight-bold'>3.0</span>
+                <span class='font-weight-light display-2'>MICA</span>
+                <span class='font-weight-bold display-2'>sh</span>
             </v-toolbar-title>
         </v-toolbar>
-        <v-navigation-drawer v-model='menu' app temporary class='blue-grey darken-4'>
+        <v-navigation-drawer v-model='menu' app temporary class='blue-grey darken-4' width='400'>
             <v-layout justify-center wrap class='py-3 fundo-menu'>
                 <span class='display-4 font-weight-bold blue--text text--lighten-1 fonte'>mica</span>
             </v-layout>

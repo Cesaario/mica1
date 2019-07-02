@@ -24,7 +24,7 @@
                 <v-dialog :key='`${obj.nome}-dialogo`' v-model='dialogo[index]' max-width="550">
                     <v-card>
                         <v-card-title primary-title>
-                            <h3 class="headline pb-4">Selecione o valor de entrada simulada de {{obj.nome}}</h3>
+                            <h5 class="display-1 pb-4 text-xs-center">Selecione o valor de entrada simulada de {{obj.nome}}</h5>
                             <v-slider class='px-2' thumb-label v-model='obj.valor' max='1' min='0' step='0.01'></v-slider>
                         </v-card-title>
                     </v-card>

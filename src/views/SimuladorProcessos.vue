@@ -8,16 +8,20 @@
                         <v-flex xs8>
                             <v-card class='ma-2' tile height='90%' @click.stop.prevent='mostrarInputFuncao()'>
                                 <v-card-actions class='justify-center' fill-height>
-                                    <katex-element style='overflow: hidden; font-size: 22px' display-mode :expression="tf"/>
+                                    <katex-element style='overflow: hidden; font-size: 32px' display-mode :expression="tf"/>
                                 </v-card-actions>
                             </v-card>
                         </v-flex>
                         <v-flex xs4>
                             <v-card class='ma-2' tile height='90%'>
                                 <v-card-actions max-height>
-                                    <v-btn class='ml-4 my-4' large color='success' @click.stop.prevent='iniciar()'>INICIAR</v-btn>
+                                    <v-btn class='ml-4 my-4' large color='success' @click.stop.prevent='iniciar()'>
+                                        <span class='headline'>INICIAR</span>
+                                    </v-btn>
                                     <v-spacer></v-spacer>
-                                    <v-btn class='mr-4 my-4' large color='error' @click.stop.prevent='parar()'>PARAR</v-btn>
+                                    <v-btn class='mr-4 my-4' large color='error' @click.stop.prevent='parar()'>
+                                        <span class='headline'>PARAR</span>
+                                    </v-btn>
                                 </v-card-actions>
                             </v-card>
                         </v-flex>
@@ -34,8 +38,8 @@
                                                 <v-icon>settings</v-icon>
                                             </v-list-tile-action>
                                             <v-list-tile-content>
-                                                <v-list-tile-title>
-                                                    <p class='title'>Configuração</p>
+                                                <v-list-tile-title style='overflow: visible;'>
+                                                    <h6 class='headline'>Configuração</h6>
                                                 </v-list-tile-title>
                                             </v-list-tile-content>
                                             <v-list-tile-action>
@@ -51,8 +55,8 @@
                                                     <v-icon>call_received</v-icon>
                                                 </v-list-tile-action>
                                                 <v-list-tile-content>
-                                                    <v-list-tile-title>
-                                                        <h6 class='title'>Entrada</h6>
+                                                    <v-list-tile-title style='overflow: visible;'>
+                                                        <h6 class='headline'>Entrada</h6>
                                                     </v-list-tile-title>
                                                 </v-list-tile-content>
                                             </v-list-tile>
@@ -69,8 +73,8 @@
                                                     <v-icon>call_made</v-icon>
                                                 </v-list-tile-action>
                                                 <v-list-tile-content>
-                                                    <v-list-tile-title>
-                                                        <h6 class='title'>Saida</h6>
+                                                    <v-list-tile-title style='overflow: visible;'>
+                                                        <h6 class='headline'>Saida</h6>
                                                     </v-list-tile-title>
                                                 </v-list-tile-content>
                                             </v-list-tile>
@@ -87,8 +91,8 @@
                                                     <v-icon>clear</v-icon>
                                                 </v-list-tile-action>
                                                 <v-list-tile-content>
-                                                    <v-list-tile-title>
-                                                        <h6 class='title'>Escala de tempo</h6>
+                                                    <v-list-tile-title style='overflow: visible;'>
+                                                        <h6 class='headline'>Escala de tempo</h6>
                                                     </v-list-tile-title>
                                                 </v-list-tile-content>
                                             </v-list-tile>
@@ -105,8 +109,8 @@
                                                     <v-icon>schedule</v-icon>
                                                 </v-list-tile-action>
                                                 <v-list-tile-content>
-                                                    <v-list-tile-title>
-                                                        <h6 class='title'>Passo de tempo</h6>
+                                                    <v-list-tile-title style='overflow: visible;'>
+                                                        <h6 class='headline'>Passo de tempo</h6>
                                                     </v-list-tile-title>
                                                 </v-list-tile-content>
                                             </v-list-tile>
@@ -146,19 +150,19 @@
             </v-card>
             </v-layout>
         </v-dialog>
-        <v-dialog v-model='inputFuncao' width='500'>
-            <v-card width='500'>
+        <v-dialog v-model='inputFuncao' width='700'>
+            <v-card width='700'>
                 <v-card-title>
-                    <h5 class='headline'>Digite os valores da função de transferência</h5>
+                    <h4 class='display-1'>Digite os valores da função de transferência</h4>
                 </v-card-title>
                 <v-card-text>
-                    <h6 class='title'>Numerador</h6>
+                    <h5 class='headline'>Numerador</h5>
                 </v-card-text>
                 <v-card-actions>
                     <v-text-field box label="Coeficientes" hide-details v-model='tfNum' @click='show'></v-text-field>
                 </v-card-actions>
                 <v-card-text>
-                    <h6 class='title'>Denominador</h6>
+                    <h5 class='headline'>Denominador</h5>
                 </v-card-text>
                 <v-card-actions>
                     <v-text-field box label="Coeficientes" hide-details v-model='tfDen' @click='show'></v-text-field>
@@ -446,5 +450,9 @@
 <style>
     .sem-sombra{
         box-shadow: none;
+    }
+    .katex-display.katex-display{
+        margin-top: 5px;
+        margin-bottom: 5px;
     }
 </style>
