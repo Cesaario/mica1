@@ -5,6 +5,9 @@ import json
 import serial
 from scipy.integrate import odeint
 
+####################################################################################
+#                            DEFINIÇÃO SOCKET
+
 sio = socketio.Server()
 app = socketio.WSGIApp(sio, static_files={
     '/': {'content_type': 'text/html', 'filename': 'index.html'}
@@ -17,6 +20,11 @@ def connect(sid, env):
 @sio.on('disconnect')
 def disconnect(sid):
     print('desconectado ', sid)
+
+####################################################################################
+#                            DEFINIÇÃO SERIAL
+
+ser = serial.Serial("COM6", 115200)
 
 ####################################################################################
 #                            SIMULADOR DE PROCESSOS
@@ -92,7 +100,12 @@ def valoresIniciais(sid, entrada, tempoAlvo, escala, A, B, C, x0, t_tend, u_tend
 
 @sio.on('escreverSaida')
 def escreverSaida(sid, saida, valor):
-	ser.write('1:1.1'.encode())
+	#data = (str(saida)+':'+str(valor)+'$')
+	data = (str(valor)+'$')
+	ser.write(data.encode())
+	print('enviando', data)
+
+####################################################################################
 
 if __name__ == '__main__':
     eventlet.wsgi.server(eventlet.listen(('', 2003)), app)

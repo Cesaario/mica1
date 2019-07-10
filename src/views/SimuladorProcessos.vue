@@ -243,7 +243,6 @@
                 drawerConfig: true,
                 mostrarConfig: true,
                 layoutTeclado: numerico.normal,
-                dtSelecionadoOsciloscopio: '0.1'
             }
         },
         methods:{
@@ -391,8 +390,10 @@
                 //Fiz assim pois do outro jeito estava com bug.
                 if(this.saidaSelecionada == 'S0'){
                     this.saidasAnalogicas[0].valor = this.simul.y_tend[this.simul.y_tend.length-1];
+                    this.$socket.emit('escreverSaida', 0, this.simul.y_tend[this.simul.y_tend.length-1]);
                 }else if(this.saidaSelecionada == 'S1'){
                     this.saidasAnalogicas[1].valor = this.simul.y_tend[this.simul.y_tend.length-1];
+                    this.$socket.emit('escreverSaida', 1, this.simul.y_tend[this.simul.y_tend.length-1]);
                 }
             }
         },
