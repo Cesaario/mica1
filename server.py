@@ -3,6 +3,7 @@ import socketio
 import numpy as np
 import json
 import serial
+import threading
 from scipy.integrate import odeint
 
 ####################################################################################
@@ -100,12 +101,31 @@ def valoresIniciais(sid, entrada, tempoAlvo, escala, A, B, C, x0, t_tend, u_tend
 
 @sio.on('escreverSaida')
 def escreverSaida(sid, saida, valor):
-	#data = (str(saida)+':'+str(valor)+'$')
-	data = (str(valor)+'$')
-	ser.write(data.encode())
-	print('enviando', data)
+	data = {
+		"tipo" : "dac",
+		"pino" : saida,
+		"valor" : valor
+	}
+	ser.write((json.dumps(data)+"$").encode())
+
+def leitura_dados(ser):
+	while(1):
+		if(ser.in_waiting > 0):
+			leitura = ser.read_until(b'}').decode('ascii')
+			handleData(leitura)
+
+def handleData(leitura):
+	obj = json.loads(leitura)
+	if(obj['tipo'] == 'adc'):
+		valorFinal = obj['valor'] / 4095
+		#sio.emit('leituraADC', {'pino':obj['pino'], 'valor':valorFinal})
+		sio.emit('leituraADC', "a")
+		print(valorFinal)
 
 ####################################################################################
 
 if __name__ == '__main__':
-    eventlet.wsgi.server(eventlet.listen(('', 2003)), app)
+	print('Inicnando...')
+	thread = threading.Thread(target=leitura_dados, args=(ser,))
+	thread.start()
+	eventlet.wsgi.server(eventlet.listen(('', 2003)), app)
