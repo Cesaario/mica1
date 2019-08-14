@@ -6,6 +6,8 @@ import serial
 import threading
 from scipy.integrate import odeint
 
+import time
+
 ####################################################################################
 #                            DEFINIÇÃO SOCKET
 
@@ -32,6 +34,8 @@ ser = serial.Serial("COM6", 115200)
 
 @sio.on('valoresIniciais')
 def valoresIniciais(sid, NumString, DenString):
+
+	start = time.time()
 
 	Num = np.asarray(json.loads(NumString)).astype(np.float)
 	Den = np.asarray(json.loads(DenString)).astype(np.float)
@@ -62,7 +66,10 @@ def valoresIniciais(sid, NumString, DenString):
 	C = Num[::-1]
 	x0 = np.zeros((1,n))
 
-	print('enviando')
+	end = time.time()
+
+	print('tempoValoresIniciais', start-end)
+
 	sio.emit('respostaValoresIniciais', {'A':json.dumps(A.tolist()),'B':json.dumps(B.tolist()),'C':json.dumps(C.tolist()),'x0':json.dumps(x0.tolist()),'n':n})
 	#sio.emit('respostaValoresIniciais', data=(json.dumps(A.tolist()), json.dumps(B.tolist()), json.dumps(C.tolist()), json.dumps(x0.tolist()), n))
 
@@ -72,7 +79,9 @@ def odeAxBu(x, t, u, A, B):
 	return batata
 
 @sio.on('calculoODE')
-def valoresIniciais(sid, entrada, tempoAlvo, escala, A, B, C, x0, t_tend, u_tend, y_tend):
+def calculoODE(sid, entrada, tempoAlvo, escala, A, B, C, x0, t_tend, u_tend, y_tend):
+
+	start = time.time()
 
 	t = escala * np.linspace(t_tend[-1], tempoAlvo, 4)
 
@@ -93,6 +102,9 @@ def valoresIniciais(sid, entrada, tempoAlvo, escala, A, B, C, x0, t_tend, u_tend
 
 	concY = y
 	y_tend = np.concatenate((y_tend, concY))
+
+	end = time.time()
+	print('tempoODE', (end-start) * 1000)
 
 	sio.emit('respostaODE', {'t':json.dumps(t.tolist()),'t_tend':json.dumps(t_tend.tolist()),'u_tend':json.dumps(u_tend.tolist()),'y_tend':json.dumps(y_tend.tolist()),'x0':json.dumps(x0.tolist())})
 
@@ -119,8 +131,6 @@ def handleData(leitura):
 	if(obj['tipo'] == 'adc'):
 		valorFinal = obj['valor'] / 4095
 		#sio.emit('leituraADC', {'pino':obj['pino'], 'valor':valorFinal})
-		sio.emit('leituraADC', "a")
-		print(valorFinal)
 
 ####################################################################################
 
