@@ -1,3 +1,4 @@
+# -*- coding: utf-8 -*-
 import eventlet
 import socketio
 import numpy as np
@@ -11,7 +12,7 @@ import time
 ####################################################################################
 #                            DEFINIÇÃO SOCKET
 
-sio = socketio.Server()
+sio = socketio.Server(cors_allowed_origins='*')
 app = socketio.WSGIApp(sio, static_files={
     '/': {'content_type': 'text/html', 'filename': 'index.html'}
 })
