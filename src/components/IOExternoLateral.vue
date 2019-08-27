@@ -57,7 +57,7 @@
                     {nome: 'S1', valor: 0}
                 ],*/
                 testMode: store.testMode,
-                dialogo: []
+				dialogo: []
             }
         },
         mounted(){
@@ -70,6 +70,11 @@
                     this.dialogo.push(false);
                 }
             }
+            this.relogio = setInterval(() => {
+				for(let i = 0; i < this.entradasAnalogicas.length; i++){
+					this.$socket.emit('pedirValorEntrada', this.entradasAnalogicas[i].nome);
+				}
+            }, 300);
         },
         methods:{
             ativar(index){
@@ -100,6 +105,12 @@
                 },
                 deep: true
             }
-        }
+		},
+		sockets: {
+            leituraADC: function(resposta){
+				console.log(resposta);
+				this.entradasAnalogicas[0].valor = resposta.valor;
+            }
+		}
     }
 </script>

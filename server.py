@@ -121,22 +121,24 @@ def escreverSaida(sid, saida, valor):
 	}
 	ser.write((json.dumps(data)+"$").encode())
 
-def leitura_dados(ser):
-	while(1):
-		if(ser.in_waiting > 0):
-			leitura = ser.read_until(b'}').decode('ascii')
-			handleData(leitura)
+@sio.on('pedirValorEntrada')
+def pedirValorEntrada(sid, entrada):
+	leitura_dados()
+
+def leitura_dados():
+	if(ser.in_waiting > 0):
+		leitura = ser.read_until(b'}').decode('ascii')
+		handleData(leitura)
 
 def handleData(leitura):
 	obj = json.loads(leitura)
 	if(obj['tipo'] == 'adc'):
-		valorFinal = obj['valor'] / 4095
-		#sio.emit('leituraADC', {'pino':obj['pino'], 'valor':valorFinal})
+		valorFinal = obj['valor'] / 4095.0
+		print(obj['valor'])
+		sio.emit('leituraADC', {'pino':obj['pino'], 'valor':valorFinal})
 
 ####################################################################################
 
 if __name__ == '__main__':
 	print('Inicnando...')
-	thread = threading.Thread(target=leitura_dados, args=(ser,))
-	thread.start()
 	eventlet.wsgi.server(eventlet.listen(('', 2003)), app)

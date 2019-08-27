@@ -413,9 +413,6 @@
                 this.simul.x0 = JSON.parse(resposta.x0);
                 this.atualizarSaida();
                 this.getData();
-            },
-            leituraADC: function(resposta){
-                console.log(resposta);
             }
         },
         mounted(){

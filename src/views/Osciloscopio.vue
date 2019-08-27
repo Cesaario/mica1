@@ -149,7 +149,7 @@
                 saidas: ['S0', 'S1'],
                 entradaSelecionada: 'E0',
                 saidaSelecionada: 'S0',
-                dtSelecionado: '0.1',
+                dtSelecionado: '0.3',
                 escalaSelecionada: '1',
                 tecladoVisivel: false,
                 inputTeclado: null,
@@ -176,7 +176,7 @@
                 drawerConfig: true,
                 mostrarConfig: true,
                 layoutTeclado: numerico.normal,
-                dtSelecionadoOsciloscopio: '0.1'
+                dtSelecionadoOsciloscopio: '0.3'
             }
         },
         methods:{
@@ -365,7 +365,7 @@
             dtMillis: function(){
                 var val = parseFloat(this.dtSelecionado);
                 if(isNaN(val)){
-                    val = 0.1;
+                    val = 0.3;
                 }
                 return val * 1000;
             },
