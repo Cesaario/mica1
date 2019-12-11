@@ -108,8 +108,21 @@
 		},
 		sockets: {
             leituraADC: function(resposta){
-				console.log(resposta);
-				this.entradasAnalogicas[0].valor = resposta.valor;
+                //console.log(resposta);
+                switch(resposta.pino){
+                    case 4:
+                        this.entradasAnalogicas[0].valor = resposta.valor;
+                        break;
+                    case 5:
+                        this.entradasAnalogicas[1].valor = resposta.valor;
+                        break;
+                    case 6:
+                        this.entradasAnalogicas[2].valor = resposta.valor;
+                        break;
+                    case 7:
+                        this.entradasAnalogicas[3].valor = resposta.valor;
+                        break;
+                }
             }
 		}
     }

@@ -45,17 +45,25 @@ void loop() {
 
   if(tempoAtual2 >= tempoAlvo2){
     tempoAlvo2 = tempoAlvo2 + dt2;
+
+    int leitura[4] = {0};
     
-    int leitura6 = analogRead(34);
+    leitura[0] = analogRead(32); //4
+    leitura[1] = analogRead(33); //5
+    leitura[2] = analogRead(34); //6
+    leitura[3] = analogRead(35); //7
+    
     const int capacity = JSON_OBJECT_SIZE(3);
     StaticJsonDocument<capacity> docADC;
     char output[128];
+
+    for(int i = 0; i < 4; i++){
+      docADC["tipo"] = "adc";
+      docADC["pino"] = i+4;
+      docADC["valor"] = leitura[i];
     
-    docADC["tipo"] = "adc";
-    docADC["pino"] = 6;
-    docADC["valor"] = leitura6;
-  
-    serializeJson(docADC, Serial);
+      serializeJson(docADC, Serial);
+    }
   }
 }
 
