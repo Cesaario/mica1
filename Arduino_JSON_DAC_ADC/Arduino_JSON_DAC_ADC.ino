@@ -6,7 +6,7 @@ int dt1 = 100;
 int tempoAtual1 = millis();
 int tempoAlvo1 = tempoAtual1 + dt1;
 
-int dt2 = 250;
+int dt2 = 1000;
 int tempoAtual2 = millis();
 int tempoAlvo2 = tempoAtual2 + dt2;
 

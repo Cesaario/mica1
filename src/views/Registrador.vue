@@ -3,34 +3,10 @@
         <IOExternoLateral tipo='entrada' @atualizarEntradas='atualizarEntradas'></IOExternoLateral>
         <IOExterno></IOExterno>
             <v-layout column>
-                <v-flex xs1>
-                    <v-layout row fill-height>
-                        <v-flex xs8>
-                            <v-card class='ma-2' tile height='90%' @click.stop.prevent='mostrarInputFuncao()'>
-                                <v-card-actions class='justify-center' fill-height>
-                                    <katex-element style='overflow: hidden; font-size: 32px' display-mode :expression="tf"/>
-                                </v-card-actions>
-                            </v-card>
-                        </v-flex>
-                        <v-flex xs4>
-                            <v-card class='ma-2' tile height='90%'>
-                                <v-card-actions max-height>
-                                    <v-btn class='ml-4 my-4' large color='success' @click.stop.prevent='iniciar()'>
-                                        <span class='headline'>INICIAR</span>
-                                    </v-btn>
-                                    <v-spacer></v-spacer>
-                                    <v-btn class='mr-4 my-4' large color='error' @click.stop.prevent='parar()'>
-                                        <span class='headline'>PARAR</span>
-                                    </v-btn>
-                                </v-card-actions>
-                            </v-card>
-                        </v-flex>
-                    </v-layout>
-                </v-flex>
                 <v-flex xs12>
                     <v-layout row fill-height>
                         <div>
-                            <v-navigation-drawer class='grey lighten-4' v-model='drawerConfig' :mini-variant.sync="mostrarConfig" hide-overlay stateless>
+                            <v-navigation-drawer class='grey lighten-4' v-model='drawerConfig' :mini-variant.sync="mostrarConfig" hide-overlay stateless width="350">
                                 <v-card class='my-2 ml-2' tile height='90%'>
                                     <v-list>
                                         <v-list-tile>
@@ -38,8 +14,8 @@
                                                 <v-icon>settings</v-icon>
                                             </v-list-tile-action>
                                             <v-list-tile-content>
-                                                <v-list-tile-title style='overflow: visible;'>
-                                                    <h6 class='headline'>Configuração</h6>
+                                                <v-list-tile-title>
+                                                    <p class='title'>Configuração</p>
                                                 </v-list-tile-title>
                                             </v-list-tile-content>
                                             <v-list-tile-action>
@@ -49,79 +25,46 @@
                                             </v-list-tile-action>
                                         </v-list-tile>
                                         <v-divider></v-divider>
-                                        <v-form ref='inputValido'>
-                                            <v-list-tile>
-                                                <v-list-tile-action>
-                                                    <v-icon>call_received</v-icon>
-                                                </v-list-tile-action>
-                                                <v-list-tile-content>
-                                                    <v-list-tile-title style='overflow: visible;'>
-                                                        <h6 class='headline'>Entrada</h6>
-                                                    </v-list-tile-title>
-                                                </v-list-tile-content>
-                                            </v-list-tile>
-                                            <v-list-tile>
-                                                <v-list-tile-content>
-                                                    <v-list-tile-action>
-                                                        <v-select v-if='!mostrarConfig' box :items='entradas' label='Selecione' hide-details v-model='entradaSelecionada' :rules="[v => !!v || 'Item necessário']"></v-select>
-                                                    </v-list-tile-action>
-                                                </v-list-tile-content>
-                                            </v-list-tile>
-
-                                            <v-list-tile>
-                                                <v-list-tile-action>
-                                                    <v-icon>call_made</v-icon>
-                                                </v-list-tile-action>
-                                                <v-list-tile-content>
-                                                    <v-list-tile-title style='overflow: visible;'>
-                                                        <h6 class='headline'>Saida</h6>
-                                                    </v-list-tile-title>
-                                                </v-list-tile-content>
-                                            </v-list-tile>
-                                            <v-list-tile>
-                                                <v-list-tile-content>
-                                                    <v-list-tile-action>
-                                                        <v-select box :items='saidas' label='Selecione' hide-details v-model='saidaSelecionada' :rules="[v => !!v || 'Item necessário']"></v-select>
-                                                    </v-list-tile-action>
-                                                </v-list-tile-content>
-                                            </v-list-tile>
-
-                                            <v-list-tile>
-                                                <v-list-tile-action>
-                                                    <v-icon>clear</v-icon>
-                                                </v-list-tile-action>
-                                                <v-list-tile-content>
-                                                    <v-list-tile-title style='overflow: visible;'>
-                                                        <h6 class='headline'>Escala de tempo</h6>
-                                                    </v-list-tile-title>
-                                                </v-list-tile-content>
-                                            </v-list-tile>
-                                            <v-list-tile>
-                                                <v-list-tile-content>
-                                                    <v-list-tile-action>
-                                                        <v-text-field box label="Multiplicador" @click='show' hide-details v-model='escalaSelecionada' :rules="[v => (!isNaN(v) && v != '') || 'Valor necessário']"></v-text-field>
-                                                    </v-list-tile-action>
-                                                </v-list-tile-content>
-                                            </v-list-tile>
-
+                                        <v-form>
                                             <v-list-tile>
                                                 <v-list-tile-action>
                                                     <v-icon>schedule</v-icon>
                                                 </v-list-tile-action>
                                                 <v-list-tile-content>
-                                                    <v-list-tile-title style='overflow: visible;'>
-                                                        <h6 class='headline'>Passo de tempo</h6>
+                                                    <v-list-tile-title>
+                                                        <h6 class='title'>Passo de tempo</h6>
                                                     </v-list-tile-title>
                                                 </v-list-tile-content>
                                             </v-list-tile>
                                             <v-list-tile>
                                                 <v-list-tile-content>
                                                     <v-list-tile-action>
-                                                        <v-text-field box label="Segundos" hide-details @click='show' v-model='dtSelecionado' :rules="[v => (!isNaN(v) && v != '') || 'Valor necessário']"></v-text-field>                                                    </v-list-tile-action>
+                                                        <v-text-field box label="Segundos" hide-details @click='show' v-model='dtSelecionadoOsciloscopio' :rules="[v => (!isNaN(v) && v != '') || 'Valor necessário']"></v-text-field>                                                    </v-list-tile-action>
                                                     <!-- </v-list-tile-action> ????? -->
                                                 </v-list-tile-content>
                                             </v-list-tile>
                                         </v-form>
+                                        <v-card-actions class="justify-center">
+                                            <v-container text-xs-center>
+                                                <v-layout row wrap justify-space-around>
+                                                    <v-flex xs6>
+                                                        <v-btn v-if='!mostrarConfig' large color='success' class='ma-2' @click.stop.prevent='iniciar()'>
+                                                            <span class='headline'>INICIAR</span>
+                                                        </v-btn>
+                                                    </v-flex>
+                                                    <v-flex xs6>
+                                                        <v-btn v-if='!mostrarConfig' large color='error' class='ma-2' @click.stop.prevent='parar()'>
+                                                            <span class='headline'>PARAR</span>
+                                                        </v-btn>
+                                                    </v-flex>
+                                                    <v-flex xs12>
+                                                        <v-btn v-if='!mostrarConfig' large color='primary' class='ma-2' @click.stop.prevent='salvar()'>
+                                                            <span class='headline'>SALVAR</span>
+                                                        </v-btn>
+                                                    </v-flex>
+                                                </v-layout>
+                                            </v-container>
+                                        </v-card-actions>
                                     </v-list>
                                 </v-card>
                             </v-navigation-drawer>
@@ -138,7 +81,6 @@
             </v-layout>
         <IOExternoLateral tipo='saida' :saidasAnalogicas='saidasAnalogicas'></IOExternoLateral>
 
-
         <v-dialog v-model='tecladoVisivel' content-class="sem-sombra" width='800'>
             <vue-touch-keyboard v-if="true" :layout="layoutTeclado" :cancel="esconderTeclado" :input='inputTeclado'/> 
         </v-dialog>
@@ -150,19 +92,19 @@
             </v-card>
             </v-layout>
         </v-dialog>
-        <v-dialog v-model='inputFuncao' width='700'>
-            <v-card width='700'>
+        <v-dialog v-model='inputFuncao' width='500'>
+            <v-card width='500'>
                 <v-card-title>
-                    <h4 class='display-1'>Digite os valores da função de transferência</h4>
+                    <h5 class='headline'>Digite os valores da função de transferência</h5>
                 </v-card-title>
                 <v-card-text>
-                    <h5 class='headline'>Numerador</h5>
+                    <h6 class='title'>Numerador</h6>
                 </v-card-text>
                 <v-card-actions>
                     <v-text-field box label="Coeficientes" hide-details v-model='tfNum' @click='show'></v-text-field>
                 </v-card-actions>
                 <v-card-text>
-                    <h5 class='headline'>Denominador</h5>
+                    <h6 class='title'>Denominador</h6>
                 </v-card-text>
                 <v-card-actions>
                     <v-text-field box label="Coeficientes" hide-details v-model='tfDen' @click='show'></v-text-field>
@@ -174,6 +116,16 @@
         <v-snackbar v-model='snackbarErroInput' top :timeout='5000'>
             <span>Preencha todos os itens da configuração</span>
             <v-btn flat @click='snackbarErroInput=false' color='red'>OK</v-btn>
+        </v-snackbar>
+
+        <v-snackbar v-model='snackbarLogin' top :timeout='5000'>
+            <span>Faça login antes de salvar os dados</span>
+            <v-btn flat @click='snackbarLogin=false' color='red'>OK</v-btn>
+        </v-snackbar>
+
+        <v-snackbar v-model='snackbarSucesso' top :timeout='5000'>
+            <span>Dados salvos com sucesso no Google Drive</span>
+            <v-btn flat @click='snackbarSucesso=false' color='red'>OK</v-btn>
         </v-snackbar>
 
 
@@ -203,7 +155,7 @@
                             zoom: {
                                 enabled: true,
                                 mode: 'x',
-                                speed: 20
+                                speed: 100
                             },
                             pan: {
                                 enabled: true,
@@ -216,7 +168,7 @@
                 saidas: ['S0', 'S1'],
                 entradaSelecionada: 'E0',
                 saidaSelecionada: 'S0',
-                dtSelecionado: '0.1',
+                dtSelecionado: '0.3',
                 escalaSelecionada: '1',
                 tecladoVisivel: false,
                 inputTeclado: null,
@@ -240,20 +192,39 @@
                     {nome: 'S1', valor: 0}
                 ],
                 snackbarErroInput: false,
+                snackbarLogin: false,
+                snackbarSucesso: false,
                 drawerConfig: true,
                 mostrarConfig: true,
                 layoutTeclado: numerico.normal,
+                dtSelecionadoOsciloscopio: '0.3'
             }
         },
         methods:{
             getData(){
                 this.dadosGrafico = {
-                    labels: this.simul.t_tend,
+                    labels: this.dadosOsciloscopio.t_tend,
                     datasets: [
-                        {label: this.saidaSelecionada,
+                        {label: 'E0',
                         backgroundColor: 'rgba(15, 70, 160, 0.8)',
-                        //data: [1,6,3,4,1]}
-                        data: this.simul.y_tend}
+                        borderColor: 'rgba(15, 70, 160, 0.8)',
+                        data: this.dadosOsciloscopio.a_tend,
+                        fill: false},
+                        {label: 'E1',
+                        backgroundColor: 'rgba(46, 125, 50, 0.8)',
+                        borderColor: 'rgba(46, 125, 50, 0.8)',
+                        data: this.dadosOsciloscopio.b_tend,
+                        fill: false},
+                        {label: 'E2',
+                        backgroundColor: 'rgba(251, 192, 45, 0.8)',
+                        borderColor: 'rgba(251, 192, 45, 0.8)',
+                        data: this.dadosOsciloscopio.c_tend,
+                        fill: false},
+                        {label: 'E3',
+                        backgroundColor: 'rgba(183, 28, 28, 0.8)',
+                        borderColor: 'rgba(183, 28, 28, 0.8)',
+                        data: this.dadosOsciloscopio.d_tend,
+                        fill: false}
                     ]
                 }
             },
@@ -301,33 +272,21 @@
                 this.inputFuncao = !this.inputFuncao;
             },
             iniciar(){
-                if(!this.$refs.inputValido.validate()){ //Checa se as configurações são válidas
-                    this.snackbarErroInput = true;
-                    return;
-                }
-                this.resetSimul(); //Reseta a simulação
-                this.$socket.emit('valoresIniciais', JSON.stringify(this.tfNum.split(' ')), JSON.stringify(this.tfDen.split(' '))) //Envia ao programa Python a função de transferência para o cálculo dos parâmetros iniciais da simulação.
+                this.resetOsciloscopio();
 
-                //Define valores da simulação baseado na configuração
-                this.simul.entrada = this.entradaComputada;
-                this.simul.escala = this.escalaTempoCopmutada;
+                this.dadosOsciloscopio.date = new Date();
+                this.dadosOsciloscopio.t0 = this.dadosOsciloscopio.date.getTime();
+                this.dadosOsciloscopio.tempoAtual = new Date().getTime() - this.dadosOsciloscopio.t0;
+                this.dadosOsciloscopio.tempoAlvo = this.dadosOsciloscopio.tempoAtual + this.simul.dt;
 
-                //Define os valores do relógio
-                this.simul.date = new Date();
-                this.simul.t0 = this.simul.date.getTime();
-                this.simul.tempoAtual = this.simul.date.getTime() - this.simul.t0;
-                this.simul.tempoAlvo = this.simul.tempoAtual + this.simul.dt;
-
-                this.simul.t_tend = [0]
-                this.simul.y_tend = [0]
-
-                //Inicia o relógio
                 this.relogio = setInterval(() => {
-                    this.simul.tempoAtual = new Date().getTime() - this.simul.t0;
-                    if(this.simul.tempoAtual <= 10000){ //Condição para parar a simulação em 10 segundos
-                        if(this.simul.tempoAtual >= this.simul.tempoAlvo){
-                            this.calculoODE(); //Chama a função que realiza o cálculo da simulação.
-                            this.simul.tempoAlvo += this.simul.dt;
+                    this.dadosOsciloscopio.tempoAtual = new Date().getTime() - this.dadosOsciloscopio.t0;
+                    if(this.dadosOsciloscopio.tempoAtual <= 999999999){ //Condição para parar a simulação
+                        if(this.dadosOsciloscopio.tempoAtual >= this.dadosOsciloscopio.tempoAlvo){
+                            this.dadosOsciloscopio.t_tend.push((this.dadosOsciloscopio.tempoAtual/1000).toFixed(1));
+                            this.dadosOsciloscopio.tempoAlvo += this.dadosOsciloscopio.dt;
+                            this.leituraEntradas();
+                            this.getData();
                         }
                     }
                 }, 50);
@@ -336,7 +295,6 @@
                 clearInterval(this.relogio);
             },
             calculoODE(){
-                //Envia via socket os dados necessários para realizar o cálculo da simulação.
                 this.$socket.emit('calculoODE',
                                 this.simul.entrada,
                                 this.simul.tempoAlvo/1000,
@@ -391,18 +349,55 @@
                 }
             },
             atualizarSaida(){
-                //Atualiza o valor da saída representada na tela e envia ao python o valor que deve ser escrito no DAC.
+                //Fiz assim pois do outro jeito estava com bug.
                 if(this.saidaSelecionada == 'S0'){
                     this.saidasAnalogicas[0].valor = this.simul.y_tend[this.simul.y_tend.length-1];
-                    this.$socket.emit('escreverSaida', 0, this.simul.y_tend[this.simul.y_tend.length-1]);
                 }else if(this.saidaSelecionada == 'S1'){
                     this.saidasAnalogicas[1].valor = this.simul.y_tend[this.simul.y_tend.length-1];
-                    this.$socket.emit('escreverSaida', 1, this.simul.y_tend[this.simul.y_tend.length-1]);
                 }
+            },
+            salvar(){
+                if(!this.$gapi.isAuthenticated()){
+                    this.snackbarLogin = true;
+                }else{
+                    this.$gapi.getGapiClient().then(gapi => {
+                        gapi.client.sheets.spreadsheets.create({
+                            properties: {
+                                title: 'MICA ' + new Date()
+                            }
+                        }).then((response) => {
+                            let valores = [
+                                ['Tempo', ...this.dadosOsciloscopio.t_tend],
+                                ['A', ...this.dadosOsciloscopio.a_tend],
+                                ['B', ...this.dadosOsciloscopio.b_tend],
+                                ['C', ...this.dadosOsciloscopio.c_tend],
+                                ['D', ...this.dadosOsciloscopio.d_tend]
+                            ];
+                            let valoresTranspostos = valores[0].map((x,i) => valores.map(x => x[i]))
+                            let body = {
+                                values: valoresTranspostos
+                            };
+                            console.log(body);
+                            this.$getGapiClient().then(gapi => {
+                                gapi.client.sheets.spreadsheets.values.update({
+                                    spreadsheetId: response.result.spreadsheetId,
+                                    range: this.getRange(),
+                                    valueInputOption: 'RAW',
+                                    resource: body
+                                }).then((responseWrite) => {
+                                    console.log(responseWrite);
+                                    this.snackbarSucesso = true;
+                                });
+                            });
+                        });
+                    });
+                }
+            },
+            getRange(){
+                return 'A1:E' + (this.dadosOsciloscopio.t_tend.length+1);
             }
         },
         sockets: {
-            //Atribui às variáveis de simulação os valores recebidos via socket.
             respostaValoresIniciais: function(resposta){
                 this.simul.A = JSON.parse(resposta.A);
                 this.simul.B = JSON.parse(resposta.B);
@@ -410,7 +405,6 @@
                 this.simul.x0 = JSON.parse(resposta.x0);
                 this.simul.n = resposta.N;
             },
-            //Atribui às variáveis de simulação os valores recebidos via socket.
             respostaODE: function(resposta){
                 this.simul.t = JSON.parse(resposta.t);
                 this.simul.t_tend = JSON.parse(resposta.t_tend);
@@ -432,7 +426,7 @@
             dtMillis: function(){
                 var val = parseFloat(this.dtSelecionado);
                 if(isNaN(val)){
-                    val = 0.1;
+                    val = 0.3;
                 }
                 return val * 1000;
             },
@@ -457,9 +451,5 @@
 <style>
     .sem-sombra{
         box-shadow: none;
-    }
-    .katex-display.katex-display{
-        margin-top: 5px;
-        margin-bottom: 5px;
     }
 </style>

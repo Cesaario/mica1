@@ -37,7 +37,6 @@
 
 <script>
     import {store} from '../main'
-    import {bus} from '@/main'
     export default{
         name: 'IOExterno',
         props:{
@@ -74,7 +73,7 @@
 				for(let i = 0; i < this.entradasAnalogicas.length; i++){
 					this.$socket.emit('pedirValorEntrada', this.entradasAnalogicas[i].nome);
 				}
-            }, 300);
+            }, 100);
         },
         methods:{
             ativar(index){
@@ -108,7 +107,7 @@
 		},
 		sockets: {
             leituraADC: function(resposta){
-                //console.log(resposta);
+                //Atribui o valor da leitura do ADC a cada entrada no painel lateral.
                 switch(resposta.pino){
                     case 4:
                         this.entradasAnalogicas[0].valor = resposta.valor;

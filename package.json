@@ -15,6 +15,7 @@
     "socket.io": "^2.2.0",
     "vue": "^2.6.10",
     "vue-chartjs": "^3.4.2",
+    "vue-gapi": "^0.1.0",
     "vue-katex": "^0.2.0",
     "vue-router": "^3.0.3",
     "vue-socket.io": "^3.0.7",

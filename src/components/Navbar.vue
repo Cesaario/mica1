@@ -68,6 +68,11 @@
                         icone: 'video_label'
                     },
                     {
+                        rota: '/registrador',
+                        nome: 'Registrador',
+                        icone: 'open_in_browser'
+                    },
+                    {
                         rota: '/config',
                         nome: 'Opções',
                         icone: 'settings'

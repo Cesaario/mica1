@@ -69,7 +69,7 @@ def valoresIniciais(sid, NumString, DenString):
 
 	end = time.time()
 
-	print('tempoValoresIniciais', start-end)
+	#print('tempoValoresIniciais', start-end)
 
 	sio.emit('respostaValoresIniciais', {'A':json.dumps(A.tolist()),'B':json.dumps(B.tolist()),'C':json.dumps(C.tolist()),'x0':json.dumps(x0.tolist()),'n':n})
 	#sio.emit('respostaValoresIniciais', data=(json.dumps(A.tolist()), json.dumps(B.tolist()), json.dumps(C.tolist()), json.dumps(x0.tolist()), n))
@@ -89,12 +89,15 @@ def calculoODE(sid, entrada, tempoAlvo, escala, A, B, C, x0, t_tend, u_tend, y_t
 	x0 = np.squeeze(np.asarray(x0))
 	x = x0
 
-	x = odeint(odeAxBu, x0, t, args=(entrada, A, B))
+	#Método Runge Kutta para resolver equações diferenciais.
+	x = odeint(odeAxBu, x0, t, args=(entrada, A, B)) 
 	aux = np.ndarray.tolist(np.linspace(0, 3-1, 3))
 	x0 = np.transpose(np.delete(x,aux,0))
 
+	#Resultado do passo da simulação
 	y = np.matmul(C,x0)
 
+	#Concatena o resultado do cálculo, o valor do tempo e a entrada aos vetores que serão retornados
 	concT = [t[-1]/escala]
 	t_tend = np.concatenate((t_tend, concT))
 
@@ -114,11 +117,13 @@ def calculoODE(sid, entrada, tempoAlvo, escala, A, B, C, x0, t_tend, u_tend, y_t
 
 @sio.on('escreverSaida')
 def escreverSaida(sid, saida, valor):
+	#Monta a string JSON que será enviada pela porta serial.
 	data = {
 		"tipo" : "dac",
 		"pino" : saida,
 		"valor" : valor
 	}
+	#Envia via porta serial os valores a serem escritos no DAC.
 	ser.write((json.dumps(data)+"$").encode())
 
 @sio.on('pedirValorEntrada')
@@ -127,14 +132,17 @@ def pedirValorEntrada(sid, entrada):
 
 def leitura_dados():
 	if(ser.in_waiting > 0):
+		#Faz a leitura de uma string JSON da porta serial.
 		leitura = ser.read_until(b'}').decode('ascii')
 		handleData(leitura)
 
 def handleData(leitura):
 	obj = json.loads(leitura)
 	if(obj['tipo'] == 'adc'):
+		#Trata a string JSON
 		valorFinal = obj['valor'] / 4095.0
 		print(obj['valor'])
+		#Envia a leitura do ADC para a interface via socket.
 		sio.emit('leituraADC', {'pino':obj['pino'], 'valor':valorFinal})
 
 ####################################################################################

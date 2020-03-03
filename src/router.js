@@ -8,6 +8,7 @@ import Planta1 from '@/plantas/Planta1'
 import Config from '@/views/Config'
 import SimuladorProcessos from '@/views/SimuladorProcessos'
 import Osciloscopio from '@/views/Osciloscopio'
+import Registrador from '@/views/Registrador'
 
 export default new Router({
   mode: 'history',
@@ -33,6 +34,10 @@ export default new Router({
     {
       path: '/osciloscopio',
       component: Osciloscopio
+    },
+    {
+      path: '/registrador',
+      component: Registrador
     }
   ]
 });
